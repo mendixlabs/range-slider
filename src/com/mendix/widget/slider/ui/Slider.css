@@ -1,0 +1,12 @@
+.widget-slider-no-value .rc-slider-handle {
+    border-color: orange;
+}
+
+.widget-slider.has-error .rc-slider-track,
+.widget-slider.has-error .rc-slider-rail {
+    background-color: #a94442;
+}
+
+.rc-slider.rc-slider-with-marks {
+    padding-bottom: 25px;
+}
