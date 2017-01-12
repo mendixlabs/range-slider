@@ -4,10 +4,10 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: "./src/com/mendix/widget/slider/slider.ts",
+    entry: "./src/com/mendix/widget/slider/Slider.ts",
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
-        filename: "src/com/mendix/widget/slider/slider.js",
+        filename: "src/com/mendix/widget/slider/Slider.js",
         libraryTarget:  "umd"
     },
     resolve: {
@@ -33,7 +33,7 @@ module.exports = {
         ], {
             copyUnmodified: true
         }),
-        new ExtractTextPlugin("./src/com/mendix/widget/slider/ui/slider.css")
+        new ExtractTextPlugin("./src/com/mendix/widget/slider/ui/Slider.css")
     ],
     watch: true
 };
