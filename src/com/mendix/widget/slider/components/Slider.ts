@@ -69,7 +69,7 @@ export class Slider extends Component<SliderProps, {}> {
         if (this.isValidMinMax(props) && props.markers > 2) {
             let interval = (props.max - props.min) / (props.markers - 1);
             for (let i = 0; i < props.markers; i++) {
-                let value = Math.round(props.min + (i * interval));
+                let value = props.min + (i * interval);
                 marks[value] = value;
             }
         }
@@ -91,6 +91,7 @@ export class Slider extends Component<SliderProps, {}> {
 
     private validateSettings(props: SliderProps): string {
         let message: Array<string> = [];
+        // This may not be executed because there is a default value for Max and Min
         if (props.max === undefined || props.max === null) {
             message.push("Maximum value needs to be set");
         }
@@ -103,7 +104,7 @@ export class Slider extends Component<SliderProps, {}> {
         if (props.step !== undefined && props.step <= 0) {
             message.push(`Step value ${props.step} should be larger than 0`);
         }
-        if (props.step !== undefined && props.max !== undefined && props.min === undefined &&
+        if (props.step !== undefined && props.max !== undefined && props.min !== undefined &&
             (props.max - props.min) % props.step > 0 ) {
 
             message.push(`Step value is invalid, max - min (${props.max} - ${props.min}) 
@@ -115,10 +116,10 @@ export class Slider extends Component<SliderProps, {}> {
 
     private validateValue(props: SliderProps): string {
         let message: Array<string> = [];
-        if (props.max < props.value) {
+        if (props.value > props.max) {
             message.push(`Value ${props.value} is larger than the maximum ${props.max}`);
         }
-        if (props.min > props.value) {
+        if (props.value < props.min) {
             message.push(`Value ${props.value} is smaller than the minimum ${props.min}`);
         }
 
