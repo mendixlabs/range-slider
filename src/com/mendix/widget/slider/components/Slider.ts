@@ -51,7 +51,8 @@ export class Slider extends Component<SliderProps, {}> {
                 onAfterChange: this.props.onAfterChange,
                 onChange: this.props.onChange,
                 step: this.props.step ? this.props.step : null,
-                tipFormatter: this.getTooltipTitle,
+                tipFormatter: this.props.tooltipTitle ? this.getTooltipTitle : null,
+                // Don't use defaultValue property from rc-slider, to support empty values after first rendering
                 value: this.props.value !== undefined ? this.props.value : this.calculateDefaultValue(this.props),
                 vertical: this.props.orientation === "vertical"
             }),
@@ -66,7 +67,7 @@ export class Slider extends Component<SliderProps, {}> {
     private calculateMarks(props: SliderProps): Marks {
         // TODO: change rounding of value to be equal to position of the steps
         let marks: Marks = {};
-        if (this.isValidMinMax(props) && props.markers > 2) {
+        if (this.isValidMinMax(props) && props.markers >= 2) {
             let interval = (props.max - props.min) / (props.markers - 1);
             for (let i = 0; i < props.markers; i++) {
                 let value = props.min + (i * interval);
@@ -130,13 +131,10 @@ export class Slider extends Component<SliderProps, {}> {
         if (this.props.value === undefined) {
             return "--";
         }
+        let displayValue = value.toString();
         if (this.props.value < this.props.min || this.props.value > this.props.max) {
-            return this.props.value.toString();
+            displayValue = this.props.value.toString();
         }
-        if (this.props.tooltipTitle) {
-            return this.props.tooltipTitle.replace(/\{1\}/, value.toString());
-        } else {
-            return value.toString();
-        }
+        return this.props.tooltipTitle.replace(/\{1\}/, displayValue);
     }
 }

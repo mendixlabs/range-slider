@@ -67,7 +67,7 @@
             <category>Appearance</category>
             <description>The number of marker, visible when larger than 2</description>
         </property>
-        <property key="tooltipTitle" type="string" required="false" defaultValue="">
+        <property key="tooltipTitle" type="string" required="false" defaultValue="{1}">
             <caption>Tooltip title</caption>
             <category>Appearance</category>
             <description>The title for the tooltip. Leave this empty to disable the tooltip.
