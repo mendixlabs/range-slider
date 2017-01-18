@@ -29,7 +29,6 @@ describe("Slider", () => {
         expect(slider).toBeElement(
             DOM.div({ className: "widget-slider" },
                 createElement(RcSlider, {
-                    defaultValue: 0,
                     max: 100,
                     min: 0,
                     disabled: false,
