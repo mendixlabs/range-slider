@@ -5,8 +5,8 @@ declare module "rc-slider" {
     interface RcSliderProps {
         min?: number;
         max?: number;
-        step?: number;
-        defaultValue?: number | Array<Number>;
+        step?: number | undefined;
+        defaultValue?: number | (Number | undefined)[];
         value?: number | Array<Number>;
         marks?: Marks;
         included?: boolean;
@@ -20,7 +20,7 @@ declare module "rc-slider" {
         onAfterChange?: (value: number) => void;
         handle?: HTMLElement;
         tipTransitionName?: string;
-        tipFormatter?: (value: number, handleIndex: number) => string;
+        tipFormatter?: ((value: number, handleIndex: number) => string) | undefined;
         dots?: boolean;
         range?: boolean | number;
         vertical?: boolean;
