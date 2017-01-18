@@ -1,3 +1,4 @@
+const path = require("path");
 var webpackConfig = require("./webpack.config");
 Object.assign(webpackConfig, {
     debug: true,
@@ -7,16 +8,23 @@ Object.assign(webpackConfig, {
         "react/lib/ReactContext",
         "react/addons",
         "jsdom"
-    ]),
-    postLoaders: [ {
-        test: /\.ts$/,
-        loader: "istanbul-instrumenter",
-        include: path.resolve(__dirname, "src"),
-        exclude: /\.(spec)\.ts$/
-    } ]
+    ])
 });
 
 module.exports = function(config) {
+    if (config.sourceMapping) {
+        Object.assign(webpackConfig, {
+            module: Object.assign(webpackConfig.module, {
+                postLoaders: [{
+                    test: /\.ts$/,
+                    loader: "istanbul-instrumenter",
+                    include: path.resolve(__dirname, "src"),
+                    exclude: /\.(spec)\.ts$/
+                }]
+            })
+        });
+    }
+
     config.set({
         basePath: "",
         frameworks: [ "jasmine" ],
@@ -29,7 +37,7 @@ module.exports = function(config) {
         preprocessors: { "tests/test-index.js": [ "webpack", "sourcemap" ] },
         webpack: webpackConfig,
         webpackServer: { noInfo: true },
-        reporters: [ "progress", "kjhtml", "coverage" ],
+        reporters: [ "progress", config.sourceMapping ? "coverage": "kjhtml" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,

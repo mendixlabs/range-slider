@@ -77,7 +77,6 @@
         ],
         "object-curly-spacing": [ true, "always" ],
         "trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
-        "member-access": false,
-        "strictNullChecks": true
+        "member-access": false
     }
 }
