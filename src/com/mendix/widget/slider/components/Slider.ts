@@ -11,16 +11,17 @@ import { ValidationAlert } from "./ValidationAlert";
 export interface SliderProps {
     hasError?: boolean;
     value?: number;
-    markers?: number;
-    max?: number;
-    min?: number;
+    noOfMarkers?: number;
+    maxValue?: number;
+    minValue?: number;
     validationMessage?: string;
-    onAfterChange?: (value: number) => void;
+    onClick?: (value: number) => void;
     onChange?: (value: number) => void;
     orientation: "horizontal" | "vertical";
-    step?: number;
-    tooltipTitle?: string;
+    stepValue?: number;
+    tooltipText?: string;
     disabled: boolean;
+    showRange?: boolean;
 }
 
 interface Marks {
@@ -43,17 +44,24 @@ export class Slider extends Component<SliderProps, {}> {
         return DOM.div({ className: classNames("widget-slider", { "has-error": withError }) },
             createElement(RcSlider, {
                 className: classNames({ "widget-slider-no-value": this.props.value === undefined }),
+                defaultValue: this.props.showRange
+                    ? [ this.props.minValue, this.props.value !== undefined ? this.props.value : this.calculateDefaultValue(this.props) ]
+                    : 0,
                 disabled: !!errorSettingMessage || this.props.disabled,
-                included: false,
+                included: this.props.showRange,
                 marks: this.calculateMarks(this.props),
-                max: this.props.max,
-                min: this.props.min,
-                onAfterChange: this.props.onAfterChange,
+                max: this.props.maxValue,
+                min: this.props.minValue,
+                onAfterChange: this.props.onClick,
                 onChange: this.props.onChange,
-                step: this.props.step ? this.props.step : null,
-                tipFormatter: this.props.tooltipTitle ? this.getTooltipTitle : null,
+                pushable: this.props.showRange,
+                range: this.props.showRange,
+                step: this.props.stepValue ? this.props.stepValue : null,
+                tipFormatter: this.props.tooltipText ? this.getTooltipTitle : null,
                 // Don't use defaultValue property from rc-slider, to support empty values after first rendering
-                value: this.props.value !== undefined ? this.props.value : this.calculateDefaultValue(this.props),
+                value: this.props.showRange
+                    ?  undefined
+                    : this.props.value !== undefined ? this.props.value : this.calculateDefaultValue(this.props),
                 vertical: this.props.orientation === "vertical"
             }),
             withError
@@ -67,10 +75,10 @@ export class Slider extends Component<SliderProps, {}> {
     private calculateMarks(props: SliderProps): Marks {
         // TODO: change rounding of value to be equal to position of the steps
         let marks: Marks = {};
-        if (this.isValidMinMax(props) && props.markers >= 2) {
-            let interval = (props.max - props.min) / (props.markers - 1);
-            for (let i = 0; i < props.markers; i++) {
-                let value = props.min + (i * interval);
+        if (this.isValidMinMax(props) && props.noOfMarkers >= 2) {
+            let interval = (props.maxValue - props.minValue) / (props.noOfMarkers - 1);
+            for (let i = 0; i < props.noOfMarkers; i++) {
+                let value = props.minValue + (i * interval);
                 marks[value] = value;
             }
         }
@@ -78,14 +86,14 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     private isValidMinMax(props: SliderProps): boolean {
-        return props.max !== undefined && props.max !== null &&
-            props.min !== undefined && props.min !== null &&
-            props.min < props.max;
+        return props.maxValue !== undefined && props.maxValue !== null &&
+            props.minValue !== undefined && props.minValue !== null &&
+            props.minValue < props.maxValue;
     }
 
     private calculateDefaultValue(props: SliderProps): number {
         if (this.isValidMinMax(props)) {
-                return props.min + (props.max - props.min) / 2;
+                return props.minValue + (props.maxValue - props.minValue) / 2;
         }
         return 0;
     }
@@ -93,35 +101,35 @@ export class Slider extends Component<SliderProps, {}> {
     private validateSettings(props: SliderProps): string {
         let message: Array<string> = [];
         // This may not be executed because there is a default value for Max and Min
-        if (props.max === undefined || props.max === null) {
+        if (props.maxValue === undefined || props.maxValue === null) {
             message.push("Maximum value needs to be set");
         }
-        if (props.min === undefined || props.min === null) {
+        if (props.minValue === undefined || props.minValue === null) {
             message.push("Minimum value needs to be set");
         }
-        if (props.min >= props.max) {
-            message.push(`Minimum value ${props.min} needs to smaller than the maximum value ${props.max}`);
+        if (props.minValue >= props.maxValue) {
+            message.push(`Minimum value ${props.minValue} needs to smaller than the maximum value ${props.maxValue}`);
         }
-        if (props.step !== undefined && props.step <= 0) {
-            message.push(`Step value ${props.step} should be larger than 0`);
+        if (props.stepValue !== undefined && props.stepValue <= 0) {
+            message.push(`Step value ${props.stepValue} should be larger than 0`);
         }
-        if (props.step !== undefined && props.max !== undefined && props.min !== undefined &&
-            (props.max - props.min) % props.step > 0 ) {
+        if (props.stepValue !== undefined && props.maxValue !== undefined && props.minValue !== undefined &&
+            (props.maxValue - props.minValue) % props.stepValue > 0 ) {
 
-            message.push(`Step value is invalid, max - min (${props.max} - ${props.min}) 
-            should be evenly divisible by the step value ${props.step}`);
+            message.push(`Step value is invalid, max - min (${props.maxValue} - ${props.minValue}) 
+            should be evenly divisible by the step value ${props.stepValue}`);
         }
 
         return message.join(", ");
     }
 
     private validateValue(props: SliderProps): string {
-        let message: Array<string> = [];
-        if (props.value > props.max) {
-            message.push(`Value ${props.value} is larger than the maximum ${props.max}`);
+        let message: string[] = [];
+        if (props.value > props.maxValue) {
+            message.push(`Value ${props.value} is larger than the maximum ${props.maxValue}`);
         }
-        if (props.value < props.min) {
-            message.push(`Value ${props.value} is smaller than the minimum ${props.min}`);
+        if (props.value < props.minValue) {
+            message.push(`Value ${props.value} is smaller than the minimum ${props.minValue}`);
         }
 
         return message.join(", ");
@@ -132,9 +140,9 @@ export class Slider extends Component<SliderProps, {}> {
             return "--";
         }
         let displayValue = value.toString();
-        if (this.props.value < this.props.min || this.props.value > this.props.max) {
+        if (this.props.value < this.props.minValue || this.props.value > this.props.maxValue) {
             displayValue = this.props.value.toString();
         }
-        return this.props.tooltipTitle.replace(/\{1\}/, displayValue);
+        return this.props.tooltipText.replace(/\{1\}/, displayValue);
     }
 }

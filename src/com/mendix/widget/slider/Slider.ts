@@ -9,21 +9,22 @@ import { Slider as SliderComponent } from "./components/Slider";
 class Slider extends WidgetBase {
     // Properties from Mendix modeler
     valueAttribute: string;
-    max: number;
+    maxValue: number;
     maxAttribute: string;
-    min: number;
+    minValue: number;
     minAttribute: string;
-    onAfterChangeMicroflow: string;
-    step: number;
+    onClickMicroflow: string;
+    stepValue: number;
     stepAttribute: string;
-    markers: number;
+    noOfMarkers: number;
     orientation: "horizontal" | "vertical";
-    tooltipTitle: string;
+    tooltipText: string;
+    showRange: boolean;
 
     private contextObject: mendix.lib.MxObject;
 
     postCreate() {
-        this.onAfterChange = this.onAfterChange.bind(this);
+        this.onClick = this.onClick.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
@@ -44,20 +45,19 @@ class Slider extends WidgetBase {
     }
 
     private updateRendering(validationMessage?: string) {
-        logger.debug(this.id + ".updateRendering");
-        const disabled = !this.contextObject || this.readOnly ||
-            this.contextObject.isReadonlyAttr(this.stepAttribute);
+        const disabled = !this.contextObject || this.readOnly || this.contextObject.isReadonlyAttr(this.stepAttribute);
         render(createElement(SliderComponent, {
             disabled,
             hasError: !!validationMessage,
-            markers: this.markers,
-            max: this.getAttributeValue(this.maxAttribute, this.max),
-            min: this.getAttributeValue(this.minAttribute, this.min),
-            onAfterChange : this.onAfterChange,
+            noOfMarkers: this.noOfMarkers,
+            maxValue: this.getAttributeValue(this.maxAttribute, this.maxValue),
+            minValue: this.getAttributeValue(this.minAttribute, this.minValue),
+            onClick : this.onClick,
             onChange: this.onChange,
             orientation: this.orientation,
-            step: this.getAttributeValue(this.stepAttribute, this.step),
-            tooltipTitle: this.tooltipTitle,
+            showRange: this.showRange,
+            stepValue: this.getAttributeValue(this.stepAttribute, this.stepValue),
+            tooltipText: this.tooltipText,
             value: this.getAttributeValue(this.valueAttribute),
             validationMessage
         }), this.domNode);
@@ -65,7 +65,7 @@ class Slider extends WidgetBase {
 
     private getAttributeValue(attributeName: string, defaultValue?: number): number {
         if (this.contextObject && attributeName) {
-            if (this.contextObject.get(attributeName) !== "") {
+            if (this.contextObject.get(attributeName)) {
                 return parseFloat(this.contextObject.get(attributeName) as string);
             }
         }
@@ -80,14 +80,14 @@ class Slider extends WidgetBase {
     }
 
     private onChange(value: number) {
-        if (typeof value !== "undefined") {
+        if ((value || value === 0) && !this.showRange) {
             this.contextObject.set(this.valueAttribute, value);
         }
     }
 
-    private onAfterChange(value: number) {
-        if (typeof value !== "undefined") {
-            this.executeAction(this.onAfterChangeMicroflow, [ this.contextObject.getGuid() ]);
+    private onClick(value: number) {
+        if (value || value === 0) {
+            this.executeAction(this.onClickMicroflow, [ this.contextObject.getGuid() ]);
         }
     }
 
@@ -113,10 +113,7 @@ class Slider extends WidgetBase {
                 guid: this.contextObject.getGuid()
             });
 
-            this.subscribeAttribute(this.valueAttribute);
-            this.subscribeAttribute(this.minAttribute);
-            this.subscribeAttribute(this.maxAttribute);
-            this.subscribeAttribute(this.stepAttribute);
+            this.subscribeAttributes([ this.valueAttribute, this.minAttribute, this.maxAttribute, this.stepAttribute ]);
 
             this.subscribe({
                 callback: validations => this.handleValidation(validations),
@@ -126,12 +123,14 @@ class Slider extends WidgetBase {
         }
     }
 
-    private subscribeAttribute(attribute: string) {
-        this.subscribe({
-            attr: attribute,
-            callback: () => this.updateRendering(),
-            guid: this.contextObject.getGuid()
-        });
+    private subscribeAttributes(attributes: string[]) {
+        attributes.forEach((attribute) =>
+            this.subscribe({
+                attr: attribute,
+                callback: () => this.updateRendering(),
+                guid: this.contextObject.getGuid()
+            })
+        );
     }
 }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <widget id="com.mendix.widget.slider.Slider" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
     <name>Slider</name>
-    <description>A slider input control</description>
+    <description>Show slider based on the value, minimum and maximum value</description>
     <icon/>
     <properties>
         <property key="valueAttribute" type="attribute">
             <caption>Value attribute</caption>
             <category>Data source</category>
-            <description>The selected value on the range</description>
+            <description>The selected value on the slider</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -15,15 +15,15 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="min" type="integer" required="true" defaultValue="0">
-            <caption>Min value</caption>
+        <property key="minValue" type="integer" required="true" defaultValue="0">
+            <caption>Minimum value</caption>
             <category>Data source</category>
-            <description>The min for the range, used if attribute is not set</description>
+            <description>The minimum slider value (used if the minimum attribute is not set)</description>
         </property>
         <property key="minAttribute" type="attribute">
-            <caption>Min attribute</caption>
+            <caption>Minimum attribute</caption>
             <category>Data source</category>
-            <description>The min for the range</description>
+            <description>Holds the minimum slider value</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -31,15 +31,15 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="max" type="integer" required="true" defaultValue="100">
-            <caption>Max value</caption>
+        <property key="maxValue" type="integer" required="true" defaultValue="100">
+            <caption>Maximum value</caption>
             <category>Data source</category>
-            <description>The max for the range, used if attribute is not set</description>
+            <description>The maximum slider value (used if the maximum attribute is not set)</description>
         </property>
         <property key="maxAttribute" type="attribute">
-            <caption>Max attribute</caption>
+            <caption>Maximum attribute</caption>
             <category>Data source</category>
-            <description>The max for the range</description>
+            <description>Holds the maximum slider value</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -47,10 +47,10 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="onAfterChangeMicroflow" type="microflow" required="false">
-            <caption>After slide</caption>
+        <property key="onClickMicroflow" type="microflow" required="false">
+            <caption>On click microflow</caption>
             <category>Behavior</category>
-            <description>Called when the range slider has ended the slide</description>
+            <description>Called when the slider is clicked or changed</description>
             <returnType type="Void"/>
         </property>
         <property key="orientation" type="enumeration" defaultValue="horizontal">
@@ -62,32 +62,36 @@
                 <enumerationValue key="vertical">Vertical</enumerationValue>
             </enumerationValues>
         </property>
-        <property key="markers" type="integer" required="true" defaultValue="0">
-            <caption>Markers</caption>
+        <property key="noOfMarkers" type="integer" required="true" defaultValue="2">
+            <caption>Number of Markers</caption>
             <category>Appearance</category>
-            <description>The number of marker, visible when larger than 2</description>
+            <description>Visible when larger than 2</description>
         </property>
-        <property key="tooltipTitle" type="string" required="false" defaultValue="{1}">
-            <caption>Tooltip title</caption>
+        <property key="tooltipText" type="string" required="false" defaultValue="{1}">
+            <caption>Tooltip text</caption>
             <category>Appearance</category>
-            <description>The title for the tooltip. Leave this empty to disable the tooltip.
-Use {1} as a replacement for the current value of the slider</description>
+            <description>Text to show when hovering over the slider value. Leave this empty to disable the tooltip. Use {1} as a replacement for the current value of the slider</description>
         </property>
-        <property key="step" type="integer" required="true" defaultValue="10">
-            <caption>Range Step Value</caption>
+        <property key="showRange" type="boolean" defaultValue="false">
+            <caption>Show range</caption>
             <category>Appearance</category>
-            <description>The step value of the range, used if attribute is not set</description>
+            <description>If true, two handles will be rendered in order to select a range</description>
         </property>
         <property key="stepAttribute" type="attribute" required="false">
-            <caption>Range step attribute</caption>
+            <caption>Step attribute</caption>
             <category>Appearance</category>
-            <description>The step value of the range from an attribute, takes precedence over range step value</description>
+            <description>Holds the value for the number of points to shift when sliding</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
                 <attributeType name="Float"/>
                 <attributeType name="Decimal"/>
             </attributeTypes>
+        </property>
+        <property key="stepValue" type="integer" required="true" defaultValue="10">
+            <caption>Step value</caption>
+            <category>Appearance</category>
+            <description>Number of points to shift when sliding (Used if step attribute is not set)</description>
         </property>
     </properties>
 </widget>
