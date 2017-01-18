@@ -45,7 +45,9 @@ class Slider extends WidgetBase {
     }
 
     private updateRendering(validationMessage?: string) {
-        const disabled = !this.contextObject || this.readOnly || this.contextObject.isReadonlyAttr(this.stepAttribute);
+        const disabled = !this.contextObject
+            || this.readOnly
+            || !!(this.stepAttribute && this.contextObject.isReadonlyAttr(this.stepAttribute));
         render(createElement(SliderComponent, {
             disabled,
             hasError: !!validationMessage,
@@ -63,12 +65,13 @@ class Slider extends WidgetBase {
         }), this.domNode);
     }
 
-    private getAttributeValue(attributeName: string, defaultValue?: number): number {
+    private getAttributeValue(attributeName: string, defaultValue?: number): number | undefined {
         if (this.contextObject && attributeName) {
-            if (this.contextObject.get(attributeName)) {
+            if (this.contextObject.get(attributeName) !== "") {
                 return parseFloat(this.contextObject.get(attributeName) as string);
             }
         }
+
         return defaultValue;
     }
 
