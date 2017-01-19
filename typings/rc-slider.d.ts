@@ -6,7 +6,7 @@ declare module "rc-slider" {
         min?: number;
         max?: number;
         step?: number | undefined;
-        defaultValue?: number | (Number | undefined)[];
+        defaultValue?: number | (Number | undefined)[] | undefined;
         value?: number | Array<Number>;
         marks?: Marks;
         included?: boolean;

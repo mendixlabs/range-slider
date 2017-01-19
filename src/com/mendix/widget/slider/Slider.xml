@@ -4,25 +4,9 @@
     <description>Show slider based on the value, minimum and maximum value</description>
     <icon/>
     <properties>
-        <property key="valueAttribute" type="attribute">
-            <caption>Value attribute</caption>
-            <category>Data source</category>
-            <description>The selected value on the slider</description>
-            <attributeTypes>
-                <attributeType name="Integer"/>
-                <attributeType name="Long"/>
-                <attributeType name="Float"/>
-                <attributeType name="Decimal"/>
-            </attributeTypes>
-        </property>
-        <property key="minValue" type="integer" required="true" defaultValue="0">
-            <caption>Minimum value</caption>
-            <category>Data source</category>
-            <description>The minimum slider value (used if the minimum attribute is not set)</description>
-        </property>
         <property key="minAttribute" type="attribute">
             <caption>Minimum attribute</caption>
-            <category>Data source</category>
+            <category>General</category>
             <description>Holds the minimum slider value</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
@@ -31,15 +15,48 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="maxValue" type="integer" required="true" defaultValue="100">
-            <caption>Maximum value</caption>
-            <category>Data source</category>
-            <description>The maximum slider value (used if the maximum attribute is not set)</description>
-        </property>
         <property key="maxAttribute" type="attribute">
             <caption>Maximum attribute</caption>
-            <category>Data source</category>
+            <category>General</category>
             <description>Holds the maximum slider value</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
+                <attributeType name="Float"/>
+                <attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="valueAttribute" required="false" type="attribute">
+            <caption>Value attribute</caption>
+            <category>Slider</category>
+            <description>The selected value on the slider</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
+                <attributeType name="Float"/>
+                <attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="showRange" type="boolean" defaultValue="false">
+            <caption>Show range</caption>
+            <category>Slider interval</category>
+            <description>If true, renders slider with range</description>
+        </property>
+        <property key="lowerBoundAttribute" required="false" type="attribute">
+            <caption>Lower bound attribute</caption>
+            <category>Slider interval</category>
+            <description>The lower bound value on the slider</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
+                <attributeType name="Float"/>
+                <attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="upperBoundAttribute" required="false" type="attribute">
+            <caption>Upper bound attribute</caption>
+            <category>Slider interval</category>
+            <description>The upper bound value on the slider</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -71,11 +88,6 @@
             <caption>Tooltip text</caption>
             <category>Appearance</category>
             <description>Text to show when hovering over the slider value. Leave this empty to disable the tooltip. Use {1} as a replacement for the current value of the slider</description>
-        </property>
-        <property key="showRange" type="boolean" defaultValue="false">
-            <caption>Show range</caption>
-            <category>Appearance</category>
-            <description>If true, two handles will be rendered in order to select a range</description>
         </property>
         <property key="stepAttribute" type="attribute" required="false">
             <caption>Step attribute</caption>

@@ -19,7 +19,9 @@ describe("Slider", () => {
             stepValue: 1,
             tooltipText: null,
             noOfMarkers: 0,
-            showRange: false
+            showRange: false,
+            lowerBound: 20,
+            upperBound: 40
         }
     });
 
@@ -57,21 +59,89 @@ describe("Slider", () => {
         expect(RcSliderComponent.props().vertical).toBe(true);
     });
 
-    describe("shows an error when", () => {
-        it(" maximum value is not set", () => {
-            sliderProps.maxValue = undefined
+    it("logs an error on console when disable is true", () => {
+        spyOn(console, "log").and.callThrough();
+        sliderProps.disabled = true;
+        sliderProps.maxValue = null;
+
+        slider = shallow(createElement(SliderComponent, sliderProps));
+
+        expect(console.log).toHaveBeenCalledWith("Maximum value is required");
+    });
+
+    describe("with a range shows an error when", () => {
+        it("lower bound value is not set", () => {
+            sliderProps.lowerBound = null;
+            sliderProps.showRange = true;
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Maximum value needs to be set");
+            expect(alert.props().message).toBe("Lower Bound value is required");
+        });
+
+        it("Lower Bound value is less than the minimum value", () => {
+            sliderProps.lowerBound = -5;
+            sliderProps.showRange = true;
+            slider = shallow(createElement(SliderComponent, sliderProps));
+            const alert = slider.find(ValidationAlert);
+
+            expect(alert.props().message).toBe("LowerBound -5 should not be less than the minimum 0");
+        });
+
+        it("Lower Bound value is greater than maximum value", () => {
+            sliderProps.lowerBound = 50;
+            sliderProps.maxValue = 30;
+            sliderProps.upperBound = 30;
+            sliderProps.showRange = true;
+            slider = shallow(createElement(SliderComponent, sliderProps));
+            const alert = slider.find(ValidationAlert);
+
+            expect(alert.props().message).toBe("LowerBound 50 should not be greater than the maximum 30");
+        });
+
+        it("upper bound value is not set", () => {
+            sliderProps.upperBound = null;
+            sliderProps.showRange = true;
+            slider = shallow(createElement(SliderComponent, sliderProps));
+            const alert = slider.find(ValidationAlert);
+
+            expect(alert.props().message).toBe("Upper Bound value is required");
+        });
+
+        it("Upper bound value is less than the minimum value", () => {
+            sliderProps.upperBound = -5;
+            sliderProps.showRange = true;
+            slider = shallow(createElement(SliderComponent, sliderProps));
+            const alert = slider.find(ValidationAlert);
+
+            expect(alert.props().message).toBe("UpperBound -5 should not be less than the minimum 0");
+        });
+
+        it("Upper bound value is greater than maximum value", () => {
+            sliderProps.upperBound = 130;
+            sliderProps.showRange = true;
+            slider = shallow(createElement(SliderComponent, sliderProps));
+            const alert = slider.find(ValidationAlert);
+
+            expect(alert.props().message).toBe("UpperBound 130 should not be greater than the maximum 100");
+        });
+    });
+
+    describe("without a range shows an error when", () => {
+        it("maximum value is not set", () => {
+            sliderProps.maxValue = null;
+            slider = shallow(createElement(SliderComponent, sliderProps));
+            const alert = slider.find(ValidationAlert);
+
+            expect(alert.props().message).toBe("Maximum value is required");
         });
 
         it("minimum value is not set", () => {
-            sliderProps.minValue = undefined
+            sliderProps.minValue = null;
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Minimum value needs to be set");
+            expect(alert.props().message).toBe("Minimum value is required");
         });
 
         it("minimum value is greater than or equal to maximum value", () => {
@@ -80,7 +150,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Minimum value 50 needs to smaller than the maximum value 30");
+            expect(alert.props().message).toBe("Minimum value 50 should be less than the maximum value 30");
         });
     });
 
@@ -105,7 +175,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Value 150 is larger than the maximum 100");
+            expect(alert.props().message).toBe("Value 150 should not be greater than the maximum 100");
         });
 
         it("less than minimum value it shows an error", () => {
@@ -113,7 +183,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Value -10 is smaller than the minimum 0");
+            expect(alert.props().message).toBe("Value -10 should not be less than the minimum 0");
         });
     });
 
@@ -141,7 +211,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Step value -10 should be larger than 0");
+            expect(alert.props().message).toBe("Step value -10 should be greater than 0");
         });
 
         it("equal to 0 it shows an error", () => {
@@ -149,7 +219,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Step value 0 should be larger than 0");
+            expect(alert.props().message).toBe("Step value 0 should be greater than 0");
         });
     });
 
@@ -172,11 +242,11 @@ describe("Slider", () => {
 
     describe("tooltip with", () => {
         it("title renders tooltip title with that title", () => {
-            sliderProps.tooltipText = "{1}";
+            sliderProps.tooltipText = "Slider";
             slider = shallow(createElement(SliderComponent, sliderProps));
             const RcSliderComponent = slider.find(RcSlider);
 
-            expect(RcSliderComponent.props().tipFormatter).toEqual(jasmine.any(Function));
+            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.tooltipText)).toBe("Slider");
         });
 
         it("value undefined renders title with text '--'", () => {
@@ -185,7 +255,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const RcSliderComponent = slider.find(RcSlider);
 
-            expect(RcSliderComponent.props().tipFormatter).toEqual(jasmine.any(Function));
+            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.value)).toBe("--");
         });
 
         it("empty string value renders no tooltip title", () => {
@@ -201,7 +271,7 @@ describe("Slider", () => {
             slider = shallow(createElement(SliderComponent, sliderProps));
             const RcSliderComponent = slider.find(RcSlider);
 
-            expect(RcSliderComponent.props().tipFormatter).toEqual(jasmine.any(Function));
+            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.value)).toBe("20");
         });
     });
 });

@@ -9,9 +9,9 @@ import { Slider as SliderComponent } from "./components/Slider";
 class Slider extends WidgetBase {
     // Properties from Mendix modeler
     valueAttribute: string;
-    maxValue: number;
+    lowerBoundAttribute: string;
+    upperBoundAttribute: string;
     maxAttribute: string;
-    minValue: number;
     minAttribute: string;
     onClickMicroflow: string;
     stepValue: number;
@@ -52,14 +52,16 @@ class Slider extends WidgetBase {
             disabled,
             hasError: !!validationMessage,
             noOfMarkers: this.noOfMarkers,
-            maxValue: this.getAttributeValue(this.maxAttribute, this.maxValue),
-            minValue: this.getAttributeValue(this.minAttribute, this.minValue),
+            lowerBound: this.getAttributeValue(this.lowerBoundAttribute),
+            maxValue: this.getAttributeValue(this.maxAttribute),
+            minValue: this.getAttributeValue(this.minAttribute),
             onClick : this.onClick,
             onChange: this.onChange,
             orientation: this.orientation,
             showRange: this.showRange,
             stepValue: this.getAttributeValue(this.stepAttribute, this.stepValue),
             tooltipText: this.tooltipText,
+            upperBound: this.getAttributeValue(this.upperBoundAttribute),
             value: this.getAttributeValue(this.valueAttribute),
             validationMessage
         }), this.domNode);
@@ -84,7 +86,17 @@ class Slider extends WidgetBase {
 
     private onChange(value: number) {
         if ((value || value === 0) && !this.showRange) {
-            this.contextObject.set(this.valueAttribute, value);
+            if (value > this.getAttributeValue(this.maxAttribute)) {
+                this.contextObject.set(this.valueAttribute, this.getAttributeValue(this.maxAttribute));
+            } else {
+                this.contextObject.set(this.valueAttribute, value);
+            }
+        } else if (Array.isArray(value)) {
+            if (value[0] !== this.getAttributeValue(this.lowerBoundAttribute, 0)) {
+                this.contextObject.set(this.lowerBoundAttribute, value[0]);
+            } else {
+                this.contextObject.set(this.upperBoundAttribute, value[1]);
+            }
         }
     }
 
@@ -116,7 +128,9 @@ class Slider extends WidgetBase {
                 guid: this.contextObject.getGuid()
             });
 
-            this.subscribeAttributes([ this.valueAttribute, this.minAttribute, this.maxAttribute, this.stepAttribute ]);
+            this.subscribeAttributes([this.valueAttribute, this.minAttribute, this.maxAttribute, this.stepAttribute,
+                this.lowerBoundAttribute, this.upperBoundAttribute
+            ]);
 
             this.subscribe({
                 callback: validations => this.handleValidation(validations),

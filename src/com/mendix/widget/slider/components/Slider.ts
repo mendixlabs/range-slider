@@ -22,6 +22,8 @@ export interface SliderProps {
     tooltipText?: string;
     disabled: boolean;
     showRange?: boolean;
+    lowerBound?: number;
+    upperBound?: number;
 }
 
 interface Marks {
@@ -46,12 +48,12 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     render() {
-        const alertMessage = this.validateSettings(this.props)
-            || this.validateValue(this.props) || this.props.validationMessage;
+        const alertMessage = this.validateSettings(this.props) 
+        || this.validateValues(this.props) || this.props.validationMessage;
 
         return DOM.div({ className: classNames("widget-slider", { "has-error": !!alertMessage }) },
-            this.createSlider(),
-            alertMessage ? createElement(ValidationAlert, { message: alertMessage }) : null
+            createElement(RcSlider, this.getSliderProps()),
+            this.showError(alertMessage)
         );
     }
 
@@ -87,11 +89,17 @@ export class Slider extends Component<SliderProps, {}> {
         if (!validMin) {
             message.push("Minimum value is required");
         }
-        if (props.minValue >= props.maxValue) {
-            message.push(`Minimum value (${props.minValue}) should be less than the maximum value (${props.maxValue})`);
+        if (typeof props.lowerBound !== "number" && this.props.showRange) {
+            message.push("Lower Bound value is required");
+        }
+        if (typeof props.upperBound !== "number" && this.props.showRange) {
+            message.push("Upper Bound value is required");
+        }
+        if (validMin && validMax && (props.minValue >= props.maxValue)) {
+            message.push(`Minimum value ${props.minValue} should be less than the maximum value ${props.maxValue}`);
         }
         if (!props.stepValue || props.stepValue <= 0) {
-            message.push(`Step value (${props.stepValue}) should be greater than 0`);
+            message.push(`Step value ${props.stepValue} should be greater than 0`);
         } else if (validMax && validMin && (props.maxValue - props.minValue) % props.stepValue > 0 ) {
             message.push(`Step value is invalid, max - min (${props.maxValue} - ${props.minValue}) 
             should be evenly divisible by the step value ${props.stepValue}`);
@@ -100,29 +108,54 @@ export class Slider extends Component<SliderProps, {}> {
         return message.join(", ");
     }
 
-    private validateValue(props: SliderProps): string | null {
-        if (props.value > props.maxValue) {
-            return `Value (${props.value}) should not be greater than the maximum (${props.maxValue})`;
+    private validateValues(props: SliderProps): string {
+        let message: string[] = [];
+        if (!this.props.showRange) {
+            if (props.value > props.maxValue) {
+                message.push(`Value ${props.value} should not be greater than the maximum ${props.maxValue}`);
+            }
+            if (props.value < props.minValue) {
+                message.push(`Value ${props.value} should not be less than the minimum ${props.minValue}`);
+            }
+        } else {
+            if (props.lowerBound > props.maxValue) {
+                message.push(`LowerBound ${props.lowerBound} should not be greater than the maximum ${props.maxValue}`);
+            }
+            if (props.lowerBound < props.minValue) {
+                message.push(`LowerBound ${props.lowerBound} should not be less than the minimum ${props.minValue}`);
+            }
+            if (props.upperBound > props.maxValue) {
+                message.push(`UpperBound ${props.upperBound} should not be greater than the maximum ${props.maxValue}`);
+            }
+            if (props.upperBound < props.minValue) {
+                message.push(`UpperBound ${props.upperBound} should not be less than the minimum ${props.minValue}`);
+            }
         }
-        if (props.value < props.minValue) {
-            return `Value (${props.value}) should not be less than the minimum (${props.minValue})`;
-        }
-
-        return null;
+        return message.join(", ");
     }
 
     private getTooltipText(value: number): string {
         if (this.props.value === undefined) {
             return "--";
         }
-        const text = this.validateValue(this.props) === null ? this.props.value.toString() : value.toString();
+        const text = this.validateValues(this.props) ? this.props.value.toString() : value.toString();
 
         return this.props.tooltipText ? this.props.tooltipText.replace(/\{1}/, text) : text;
     }
 
-    private createSlider() {
+    private showError(alertMessage: string): React.ReactNode {
+        if (alertMessage && !this.props.disabled) {
+            return createElement(ValidationAlert, { message: alertMessage });
+        } else if (alertMessage) {
+            console.log(alertMessage);
+        }
+
+        return null;
+    }
+
+    private getSliderProps() {
         const { minValue, showRange, value, stepValue } = this.props;
-        const RcSliderProps = {
+        const props: any = {
             disabled: !!this.validateSettings(this.props) || this.props.disabled,
             included: showRange,
             marks: this.calculateMarks(this.props),
@@ -130,28 +163,19 @@ export class Slider extends Component<SliderProps, {}> {
             min: minValue,
             onAfterChange: this.props.onClick,
             onChange: this.props.onChange,
-            pushable: showRange,
+            pushable: false,
             range: showRange,
             step: stepValue ? stepValue : null,
             tipFormatter: this.props.tooltipText ? this.getTooltipText : null,
             vertical: this.props.orientation === "vertical"
-        };
-        if (showRange) {
-            Object.defineProperty(RcSliderProps, "defaultValue", {
-                value: [ minValue, value ? value : this.calculateDefaultValue(this.props) ],
-                writable: true,
-                enumerable: true,
-                configurable: true
-            });
-        } else {
-            Object.defineProperty(RcSliderProps, "value", {
-                value: value ? value : this.calculateDefaultValue(this.props),
-                writable: true,
-                enumerable: true,
-                configurable: true
-            });
         }
 
-        return createElement(RcSlider, RcSliderProps);
+        if (showRange) {
+            props.defaultValue = [ this.props.lowerBound, this.props.upperBound ];
+        } else {
+            props.value = typeof value === "number" ? value : this.calculateDefaultValue(this.props)
+        }
+
+        return props;
     }
 }
