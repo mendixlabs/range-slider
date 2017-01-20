@@ -21,11 +21,11 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "skipLibCheck": false
+    "skipLibCheck": false,
+    "strictNullChecks": true
   },
   "exclude": [
     "dist/",
     "node_modules/"
-  ],
-  "strictNullChecks": true
+  ]
 }

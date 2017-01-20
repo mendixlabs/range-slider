@@ -20,7 +20,7 @@ declare module "rc-slider" {
         onAfterChange?: (value: number) => void;
         handle?: HTMLElement;
         tipTransitionName?: string;
-        tipFormatter?: ((value: number, handleIndex: number) => string) | undefined;
+        tipFormatter?: ((value: number, handleIndex: number) => string) | undefined | null;
         dots?: boolean;
         range?: boolean | number;
         vertical?: boolean;
