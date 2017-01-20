@@ -95,7 +95,12 @@ class Slider extends WidgetBase {
             if (value[0] !== this.getAttributeValue(this.lowerBoundAttribute, 0)) {
                 this.contextObject.set(this.lowerBoundAttribute, value[0]);
             } else {
-                this.contextObject.set(this.upperBoundAttribute, value[1]);
+                if (value[1] > this.getAttributeValue(this.maxAttribute)) {
+                    this.contextObject.set(this.upperBoundAttribute, this.getAttributeValue(this.maxAttribute));
+                } else {
+                    this.contextObject.set(this.upperBoundAttribute, value[1]);
+                }
+
             }
         }
     }
