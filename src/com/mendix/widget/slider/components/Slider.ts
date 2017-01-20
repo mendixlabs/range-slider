@@ -12,18 +12,18 @@ export interface SliderProps {
     hasError?: boolean;
     value?: number;
     noOfMarkers?: number;
-    maxValue?: number;
-    minValue?: number;
+    maxValue?: number | null;
+    minValue?: number | null;
     validationMessage?: string;
     onClick?: (value: number) => void;
     onChange?: (value: number) => void;
     orientation: "horizontal" | "vertical";
     stepValue?: number;
-    tooltipText?: string;
+    tooltipText?: string | null;
     disabled: boolean;
     showRange?: boolean;
-    lowerBound?: number;
-    upperBound?: number;
+    lowerBound?: number | null;
+    upperBound?: number | null;
 }
 
 interface Marks {
@@ -143,7 +143,7 @@ export class Slider extends Component<SliderProps, {}> {
         return this.props.tooltipText ? this.props.tooltipText.replace(/\{1}/, text) : text;
     }
 
-    private showError(alertMessage: string): React.ReactNode {
+    private showError(alertMessage: string | undefined): React.ReactNode {
         if (alertMessage && !this.props.disabled) {
             return createElement(ValidationAlert, { message: alertMessage });
         } else if (alertMessage) {
@@ -154,12 +154,12 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     private getSliderProps() {
-        const { minValue, showRange, value, stepValue } = this.props;
+        const { maxValue, minValue, showRange, value, stepValue, lowerBound, upperBound } = this.props;
         const props: any = {
             disabled: !!this.validateSettings(this.props) || this.props.disabled,
             included: showRange,
             marks: this.calculateMarks(this.props),
-            max: this.props.maxValue,
+            max: maxValue,
             min: minValue,
             onAfterChange: this.props.onClick,
             onChange: this.props.onChange,
@@ -171,7 +171,12 @@ export class Slider extends Component<SliderProps, {}> {
         }
 
         if (showRange) {
-            props.defaultValue = [ this.props.lowerBound, this.props.upperBound ];
+            const validLowerBound = typeof lowerBound === "number";
+            const validUpperBound = typeof upperBound === "number";
+            props.defaultValue = [
+                validLowerBound ? lowerBound : this.isValidMinMax(props) ? (minValue + stepValue) : 1,
+                validUpperBound ? upperBound : this.isValidMinMax(props) ? (maxValue - stepValue) : (100 - stepValue)
+            ];
         } else {
             props.value = typeof value === "number" ? value : this.calculateDefaultValue(this.props)
         }
