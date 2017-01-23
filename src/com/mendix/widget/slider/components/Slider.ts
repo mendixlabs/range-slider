@@ -90,10 +90,10 @@ export class Slider extends Component<SliderProps, {}> {
             message.push("Minimum value is required");
         }
         if (typeof props.lowerBound !== "number" && this.props.showRange) {
-            message.push("Lower Bound value is required");
+            message.push("Lower bound value is required");
         }
         if (typeof props.upperBound !== "number" && this.props.showRange) {
-            message.push("Upper Bound value is required");
+            message.push("Upper bound value is required");
         }
         if (validMin && validMax && (props.minValue >= props.maxValue)) {
             message.push(`Minimum value ${props.minValue} should be less than the maximum value ${props.maxValue}`);
@@ -119,16 +119,16 @@ export class Slider extends Component<SliderProps, {}> {
             }
         } else {
             if (props.lowerBound > props.maxValue) {
-                message.push(`LowerBound ${props.lowerBound} should not be greater than the maximum ${props.maxValue}`);
+                message.push(`Lower bound ${props.lowerBound} should not be greater than the maximum ${props.maxValue}`);
             }
             if (props.lowerBound < props.minValue) {
-                message.push(`LowerBound ${props.lowerBound} should not be less than the minimum ${props.minValue}`);
+                message.push(`Lower bound ${props.lowerBound} should not be less than the minimum ${props.minValue}`);
             }
             if (props.upperBound > props.maxValue) {
-                message.push(`UpperBound ${props.upperBound} should not be greater than the maximum ${props.maxValue}`);
+                message.push(`Upper bound ${props.upperBound} should not be greater than the maximum ${props.maxValue}`);
             }
             if (props.upperBound < props.minValue) {
-                message.push(`UpperBound ${props.upperBound} should not be less than the minimum ${props.minValue}`);
+                message.push(`Upper bound ${props.upperBound} should not be less than the minimum ${props.minValue}`);
             }
         }
         return message.join(", ");
