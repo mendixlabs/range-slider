@@ -2,10 +2,14 @@
 Displays a slider.
 
 ## Features
-* Show slider based on the value, minimum and maximum value
+* Show a single slider value
+* Show a range slider
 
 ## Dependencies
 Mendix 6
+
+## Demo project
+https://rangeslider.mxapps.io/
 
 ## Disclaimer
 Status: In development
