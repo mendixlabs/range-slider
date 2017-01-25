@@ -20,6 +20,7 @@ class Slider extends WidgetBase {
     orientation: "horizontal" | "vertical";
     tooltipText: string;
     showRange: boolean;
+    decimalPlaces: number;
 
     private contextObject: mendix.lib.MxObject;
 
@@ -49,6 +50,7 @@ class Slider extends WidgetBase {
             || this.readOnly
             || !!(this.stepAttribute && this.contextObject.isReadonlyAttr(this.stepAttribute));
         render(createElement(SliderComponent, {
+            decimalPlaces: this.decimalPlaces,
             disabled,
             hasError: !!validationMessage,
             noOfMarkers: this.noOfMarkers,
@@ -114,8 +116,7 @@ class Slider extends WidgetBase {
     private executeAction(actionname: string, guids: string[]) {
         if (actionname) {
             window.mx.ui.action(actionname, {
-                error: error =>
-                    window.mx.ui.error(`An error occurred while executing microflow: ${error.message}`, true),
+                error: error => this.updateRendering(`An error occurred while executing microflow: ${error.message}`),
                 params: {
                     applyto: "selection",
                     guids

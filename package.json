@@ -1,7 +1,7 @@
 {
   "name": "slider",
   "version": "0.1.0",
-  "description": "Form input slider",
+  "description": "Displays a slider.",
   "scripts": {
     "pretest": "tsc",
     "test": "karma start --single-run --sourceMapping && node tests/remap.js"
