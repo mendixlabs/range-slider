@@ -23,8 +23,8 @@ describe("Slider", () => {
             lowerBound: 20,
             upperBound: 40
         }
-    }); //TODO: incorrect alignment on next line
-const renderSlider = (props: SliderProps) => shallow(createElement(SliderComponent, props));
+    });
+    const renderSlider = (props: SliderProps) => shallow(createElement(SliderComponent, props));
 
     it("renders the structure", () => {
         slider = renderSlider(sliderProps);
@@ -45,14 +45,14 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         );
     });
 
-    it("creates an horizontal slider when orientation is horizontal", () => { // TODO: when "THE" orientation
+    it("creates an horizontal slider when the orientation is horizontal", () => {
         slider = renderSlider(sliderProps);
         const RcSliderComponent = slider.find(RcSlider);
 
         expect(RcSliderComponent.props().vertical).toBe(false);
     });
 
-    it("creates a vertical slider when orientation is vertical", () => { // TODO: Same here
+    it("creates a vertical slider when the orientation is vertical", () => {
         sliderProps.orientation = "vertical";
         slider = renderSlider(sliderProps);;
         const RcSliderComponent = slider.find(RcSlider);
@@ -60,17 +60,17 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         expect(RcSliderComponent.props().vertical).toBe(true);
     });
 
-    it("logs all errors on console when disabled", () => { // TODO: on THE console
+    it("logs all errors on the console when disabled", () => {
         spyOn(console, "log").and.callThrough();
         sliderProps.disabled = true;
         sliderProps.maxValue = null;
 
-        slider = renderSlider(sliderProps); // TODO: Don't need the slider =
+        renderSlider(sliderProps);
 
         expect(console.log).toHaveBeenCalledWith("Maximum value is required");
     });
 
-    describe("shows an error when", () => { // TODO: when THE
+    describe("shows an error when the", () => {
         it("maximum value is not set", () => {
             sliderProps.maxValue = null;
             slider = renderSlider(sliderProps);
@@ -87,7 +87,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(alert.props().message).toBe("Minimum value is required");
         });
 
-        it("minimum value is greater than or equal to maximum value", () => { // TODO: to THE maximimum
+        it("minimum value is greater than or equal to the maximum value", () => {
             sliderProps.minValue = 50;
             sliderProps.maxValue = 30;
             slider = renderSlider(sliderProps);
@@ -97,7 +97,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         });
     });
 
-    describe("with a range interval shows an error when", () => { // TODO: when THE
+    describe("with a range interval shows an error when the", () => {
         beforeEach(() => { sliderProps.showRange = true; });
 
         it("lower bound value is not set", () => {
@@ -116,7 +116,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(alert.props().message).toBe("Lower bound -5 should not be less than the minimum 0");
         });
 
-        it("lower bound value is greater than maximum value", () => { // TODO: than THE
+        it("lower bound value is greater than the maximum value", () => {
             sliderProps.lowerBound = 50;
             sliderProps.maxValue = 30;
             sliderProps.upperBound = 30;
@@ -142,7 +142,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(alert.props().message).toBe("Upper bound -5 should not be less than the minimum 0");
         });
 
-        it("upper bound value is greater than maximum value", () => { // TODO: than THE
+        it("upper bound value is greater than the maximum value", () => {
             sliderProps.upperBound = 130;
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
@@ -152,14 +152,14 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
     });
 
     describe("without a range interval", () => {
-        it("renders a slider with given value", () => { // TODO: with THE
+        it("renders a slider with the given value", () => {
             slider = renderSlider(sliderProps);
             const RcSliderComponent = slider.find(RcSlider);
 
             expect(RcSliderComponent.props().value).toBe(sliderProps.value);
         });
 
-        it("renders slider with calculated default value when value is undefined", () => { // TODO: when THE
+        it("renders slider with calculated default value when the value is undefined", () => {
             sliderProps.value = undefined;
             slider = renderSlider(sliderProps);
             const RcSliderComponent = slider.find(RcSlider);
@@ -167,7 +167,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(RcSliderComponent.props().value).toBe((sliderProps.maxValue - sliderProps.minValue)/2);
         });
 
-        it("shows an error when value is greater than maximum value", () => { // TODO: correct as above... in 2 places
+        it("shows an error when the value is greater than the maximum value", () => {
             sliderProps.value = 150;
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
@@ -175,7 +175,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(alert.props().message).toBe("Value 150 should not be greater than the maximum 100");
         });
 
-        it("shows an error when value is less than minimum value", () => { // TODO: same as above
+        it("shows an error when value is less than minimum value", () => {
             sliderProps.value = -10;
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
@@ -184,8 +184,8 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         });
     });
 
-    describe("with step value shows an error", () => { // TODO: with the step value specified...
-        it("when step value is equal to 0", () => { // TODO: when THE
+    describe("with the step value specified shows an error", () => {
+        it("when the step value is equal to 0", () => {
             sliderProps.stepValue = 0;
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
@@ -193,7 +193,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(alert.props().message).toBe("Step value 0 should be greater than 0");
         });
 
-        it("when step value is less than 0", () => { // TODO: same as above
+        it("when the step value is less than 0", () => {
             sliderProps.stepValue = -10;
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
@@ -201,7 +201,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
             expect(alert.props().message).toBe("Step value -10 should be greater than 0");
         });
 
-        it("when step value does not evenly divide (maximum - minimum)", () => { // TODO: same as above
+        it("when the step value does not evenly divide (maximum - minimum)", () => {
             sliderProps.stepValue = 6;
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
@@ -211,7 +211,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         });
     });
 
-    describe("with marker value", () => { // TODO: with THE marker value
+    describe("with the marker value", () => {
         it("less than 2 renders no markers", () => {
             slider = renderSlider(sliderProps);
             const RcSliderComponent = slider.find(RcSlider);
@@ -228,7 +228,7 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         });
     });
 
-    describe("with tooltip", () => { // TODO: with A
+    describe("with a tooltip", () => {
         it("renders a tooltip title with the correct text", () => {
             sliderProps.tooltipText = "Slider";
             slider = renderSlider(sliderProps);
@@ -238,14 +238,14 @@ const renderSlider = (props: SliderProps) => shallow(createElement(SliderCompone
         });
 
         it("renders a tooltip with '--' when no value is specified", () => {
-            sliderProps.value = undefined // TODO: semi-colon
+            sliderProps.value = undefined;
             slider = renderSlider(sliderProps);
             const RcSliderComponent = slider.find(RcSlider);
 
             expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.tooltipText)).toBe("--");
         });
 
-        it("renders no tooltip title when value is empty string", () => { // TODO: shouldn't it be the same as above??
+        it("renders no tooltip title when value is empty", () => {
             sliderProps.tooltipText = "";
             slider = renderSlider(sliderProps);
             const RcSliderComponent = slider.find(RcSlider);
