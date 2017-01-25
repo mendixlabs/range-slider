@@ -24,6 +24,7 @@ export interface SliderProps {
     showRange?: boolean;
     lowerBound?: number | null;
     upperBound?: number | null;
+    decimalPlaces?: number;
 }
 
 interface Marks {
@@ -58,12 +59,11 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     private calculateMarks(props: SliderProps): Marks {
-        // TODO: change rounding of value to be equal to position of the steps
         let marks: Marks = {};
         if (this.isValidMinMax(props) && props.noOfMarkers >= 2) {
-            let interval = (props.maxValue - props.minValue) / (props.noOfMarkers - 1);
+            const interval = (props.maxValue - props.minValue) / (props.noOfMarkers - 1);
             for (let i = 0; i < props.noOfMarkers; i++) {
-                let value = props.minValue + (i * interval);
+                let value = parseFloat((props.minValue + (i * interval)).toFixed(props.decimalPlaces));
                 marks[value] = value;
             }
         }
@@ -168,7 +168,7 @@ export class Slider extends Component<SliderProps, {}> {
             step: stepValue ? stepValue : null,
             tipFormatter: this.props.tooltipText ? this.getTooltipText : null,
             vertical: this.props.orientation === "vertical"
-        }
+        };
 
         if (showRange) {
             const validLowerBound = typeof lowerBound === "number";
