@@ -1,5 +1,6 @@
-import { ShallowWrapper, shallow } from "enzyme";
-import { DOM, createElement } from "react";
+import { shallow, ShallowWrapper } from "enzyme";
+import { createElement, DOM } from "react";
+
 import * as RcSlider from "rc-slider";
 
 import { Slider as SliderComponent, SliderProps } from "../Slider";
@@ -11,18 +12,17 @@ describe("Slider", () => {
     let slider: ShallowWrapper<SliderProps, any>;
     beforeEach(() => {
         sliderProps = {
+            disabled: false,
+            lowerBound: 20,
             maxValue: 100,
             minValue: 0,
-            orientation: "horizontal",
-            disabled: false,
-            value: 20,
-            stepValue: 1,
-            tooltipText: "{1}",
             noOfMarkers: 0,
             showRange: false,
-            lowerBound: 20,
-            upperBound: 40
-        }
+            stepValue: 1,
+            tooltipText: "{1}",
+            upperBound: 40,
+            value: 20
+        };
     });
     const renderSlider = (props: SliderProps) => shallow(createElement(SliderComponent, props));
 
@@ -32,32 +32,24 @@ describe("Slider", () => {
         expect(slider).toBeElement(
             DOM.div({ className: "widget-slider" },
                 createElement(RcSlider, {
+                    disabled: false,
+                    included: false,
                     max: 100,
                     min: 0,
-                    disabled: false,
-                    value: 20,
                     step: 1,
                     tipFormatter: jasmine.any(Function) as any,
-                    included: false,
+                    value: 20,
                     vertical: false
                 })
             )
         );
     });
 
-    it("creates an horizontal slider when the orientation is horizontal", () => {
+    it("creates an horizontal slider", () => {
         slider = renderSlider(sliderProps);
         const RcSliderComponent = slider.find(RcSlider);
 
         expect(RcSliderComponent.props().vertical).toBe(false);
-    });
-
-    it("creates a vertical slider when the orientation is vertical", () => {
-        sliderProps.orientation = "vertical";
-        slider = renderSlider(sliderProps);;
-        const RcSliderComponent = slider.find(RcSlider);
-
-        expect(RcSliderComponent.props().vertical).toBe(true);
     });
 
     it("logs all errors on the console when disabled", () => {
@@ -113,7 +105,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Lower bound -5 should not be less than the minimum 0");
+            expect(alert.props().message).toBe("Lower bound -5 should be greater than the minimum 0");
         });
 
         it("lower bound value is greater than the maximum value", () => {
@@ -123,7 +115,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Lower bound 50 should not be greater than the maximum 30");
+            expect(alert.props().message).toBe("Lower bound 50 should be less than the maximum 30");
         });
 
         it("upper bound value is not set", () => {
@@ -139,7 +131,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Upper bound -5 should not be less than the minimum 0");
+            expect(alert.props().message).toBe("Upper bound -5 should be greater than the minimum 0");
         });
 
         it("upper bound value is greater than the maximum value", () => {
@@ -147,7 +139,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Upper bound 130 should not be greater than the maximum 100");
+            expect(alert.props().message).toBe("Upper bound 130 should be less than the maximum 100");
         });
     });
 
@@ -164,7 +156,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const RcSliderComponent = slider.find(RcSlider);
 
-            expect(RcSliderComponent.props().value).toBe((sliderProps.maxValue - sliderProps.minValue)/2);
+            expect(RcSliderComponent.props().value).toBe((sliderProps.maxValue - sliderProps.minValue) / 2);
         });
 
         it("shows an error when the value is greater than the maximum value", () => {
@@ -172,7 +164,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Value 150 should not be greater than the maximum 100");
+            expect(alert.props().message).toBe("Value 150 should be less than the maximum 100");
         });
 
         it("shows an error when value is less than minimum value", () => {
@@ -180,7 +172,7 @@ describe("Slider", () => {
             slider = renderSlider(sliderProps);
             const alert = slider.find(ValidationAlert);
 
-            expect(alert.props().message).toBe("Value -10 should not be less than the minimum 0");
+            expect(alert.props().message).toBe("Value -10 should be greater than the minimum 0");
         });
     });
 

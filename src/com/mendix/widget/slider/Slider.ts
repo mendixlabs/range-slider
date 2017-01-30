@@ -17,7 +17,6 @@ class Slider extends WidgetBase {
     stepValue: number;
     stepAttribute: string;
     noOfMarkers: number;
-    orientation: "horizontal" | "vertical";
     tooltipText: string;
     showRange: boolean;
     decimalPlaces: number;
@@ -53,13 +52,12 @@ class Slider extends WidgetBase {
             decimalPlaces: this.decimalPlaces,
             disabled,
             hasError: !!validationMessage,
-            noOfMarkers: this.noOfMarkers,
             lowerBound: this.getAttributeValue(this.lowerBoundAttribute),
             maxValue: this.getAttributeValue(this.maxAttribute),
             minValue: this.getAttributeValue(this.minAttribute),
-            onClick : this.onClick,
+            noOfMarkers: this.noOfMarkers,
             onChange: this.onChange,
-            orientation: this.orientation,
+            onClick : this.onClick,
             showRange: this.showRange,
             stepValue: this.getAttributeValue(this.stepAttribute, this.stepValue),
             tooltipText: this.tooltipText,
@@ -116,7 +114,7 @@ class Slider extends WidgetBase {
     private executeAction(actionname: string, guids: string[]) {
         if (actionname) {
             window.mx.ui.action(actionname, {
-                error: error => this.updateRendering(`An error occurred while executing microflow: ${error.message}`),
+                error: (error) => this.updateRendering(`An error occurred while executing microflow: ${error.message}`),
                 params: {
                     applyto: "selection",
                     guids
@@ -134,12 +132,11 @@ class Slider extends WidgetBase {
                 guid: this.contextObject.getGuid()
             });
 
-            this.subscribeAttributes([this.valueAttribute, this.minAttribute, this.maxAttribute, this.stepAttribute,
-                this.lowerBoundAttribute, this.upperBoundAttribute
-            ]);
+            this.subscribeAttributes([ this.valueAttribute, this.minAttribute, this.maxAttribute, this.stepAttribute,
+                this.lowerBoundAttribute, this.upperBoundAttribute ]);
 
             this.subscribe({
-                callback: validations => this.handleValidation(validations),
+                callback: (validations) => this.handleValidation(validations),
                 guid: this.contextObject.getGuid(),
                 val: true
             });
@@ -159,8 +156,8 @@ class Slider extends WidgetBase {
 
 // tslint:disable : only-arrow-functions
 dojoDeclare("com.mendix.widget.slider.Slider", [ WidgetBase ], function(Source: any) {
-    let result: any = {};
-    for (let property in Source.prototype) {
+    const result: any = {};
+    for (const property in Source.prototype) {
         if (property !== "constructor" && Source.prototype.hasOwnProperty(property)) {
             result[property] = Source.prototype[property];
         }

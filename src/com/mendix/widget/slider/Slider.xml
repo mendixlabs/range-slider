@@ -70,15 +70,6 @@
             <description>Called when the slider is clicked or changed</description>
             <returnType type="Void"/>
         </property>
-        <property key="orientation" type="enumeration" defaultValue="horizontal">
-            <caption>Orientation</caption>
-            <category>Appearance</category>
-            <description>Slider orientation: horizontal or vertical</description>
-            <enumerationValues>
-                <enumerationValue key="horizontal">Horizontal</enumerationValue>
-                <enumerationValue key="vertical">Vertical</enumerationValue>
-            </enumerationValues>
-        </property>
         <property key="noOfMarkers" type="integer" required="true" defaultValue="2">
             <caption>Number of Markers</caption>
             <category>Appearance</category>

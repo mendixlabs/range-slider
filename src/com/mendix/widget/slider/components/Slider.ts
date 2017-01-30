@@ -1,10 +1,10 @@
-import { Component, DOM, createElement } from "react";
+import { Component, createElement, DOM } from "react";
 
 import * as classNames from "classnames";
 import * as RcSlider from "rc-slider";
 
-import "../ui/Slider.css";
 import "rc-slider/dist/rc-slider.css";
+import "../ui/Slider.css";
 
 import { ValidationAlert } from "./ValidationAlert";
 
@@ -17,7 +17,6 @@ export interface SliderProps {
     validationMessage?: string;
     onClick?: (value: number) => void;
     onChange?: (value: number) => void;
-    orientation: "horizontal" | "vertical";
     stepValue?: number;
     tooltipText?: string | null;
     disabled: boolean;
@@ -40,7 +39,6 @@ export class Slider extends Component<SliderProps, {}> {
         maxValue: 100,
         minValue: 0,
         noOfMarkers: 2,
-        orientation: "horizontal",
         tooltipText: ""
     };
     constructor(props: SliderProps) {
@@ -49,7 +47,7 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     render() {
-        const alertMessage = this.validateSettings(this.props) 
+        const alertMessage = this.validateSettings(this.props)
         || this.validateValues(this.props) || this.props.validationMessage;
 
         return DOM.div({ className: classNames("widget-slider", { "has-error": !!alertMessage }) },
@@ -59,11 +57,11 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     private calculateMarks(props: SliderProps): Marks {
-        let marks: Marks = {};
+        const marks: Marks = {};
         if (this.isValidMinMax(props) && props.noOfMarkers >= 2) {
             const interval = (props.maxValue - props.minValue) / (props.noOfMarkers - 1);
             for (let i = 0; i < props.noOfMarkers; i++) {
-                let value = parseFloat((props.minValue + (i * interval)).toFixed(props.decimalPlaces));
+                const value = parseFloat((props.minValue + (i * interval)).toFixed(props.decimalPlaces));
                 marks[value] = value;
             }
         }
@@ -80,7 +78,7 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     private validateSettings(props: SliderProps): string {
-        let message: string[] = [];
+        const message: string[] = [];
         const validMax = typeof props.maxValue === "number";
         const validMin = typeof props.minValue === "number";
         if (!validMax) {
@@ -109,26 +107,26 @@ export class Slider extends Component<SliderProps, {}> {
     }
 
     private validateValues(props: SliderProps): string {
-        let message: string[] = [];
+        const message: string[] = [];
         if (!this.props.showRange) {
             if (props.value > props.maxValue) {
-                message.push(`Value ${props.value} should not be greater than the maximum ${props.maxValue}`);
+                message.push(`Value ${props.value} should be less than the maximum ${props.maxValue}`);
             }
             if (props.value < props.minValue) {
-                message.push(`Value ${props.value} should not be less than the minimum ${props.minValue}`);
+                message.push(`Value ${props.value} should be greater than the minimum ${props.minValue}`);
             }
         } else {
             if (props.lowerBound > props.maxValue) {
-                message.push(`Lower bound ${props.lowerBound} should not be greater than the maximum ${props.maxValue}`);
+                message.push(`Lower bound ${props.lowerBound} should be less than the maximum ${props.maxValue}`);
             }
             if (props.lowerBound < props.minValue) {
-                message.push(`Lower bound ${props.lowerBound} should not be less than the minimum ${props.minValue}`);
+                message.push(`Lower bound ${props.lowerBound} should be greater than the minimum ${props.minValue}`);
             }
             if (props.upperBound > props.maxValue) {
-                message.push(`Upper bound ${props.upperBound} should not be greater than the maximum ${props.maxValue}`);
+                message.push(`Upper bound ${props.upperBound} should be less than the maximum ${props.maxValue}`);
             }
             if (props.upperBound < props.minValue) {
-                message.push(`Upper bound ${props.upperBound} should not be less than the minimum ${props.minValue}`);
+                message.push(`Upper bound ${props.upperBound} should be greater than the minimum ${props.minValue}`);
             }
         }
         return message.join(", ");
@@ -166,8 +164,7 @@ export class Slider extends Component<SliderProps, {}> {
             pushable: false,
             range: showRange,
             step: stepValue ? stepValue : null,
-            tipFormatter: this.props.tooltipText ? this.getTooltipText : null,
-            vertical: this.props.orientation === "vertical"
+            tipFormatter: this.props.tooltipText ? this.getTooltipText : null
         };
 
         if (showRange) {
@@ -178,7 +175,7 @@ export class Slider extends Component<SliderProps, {}> {
                 validUpperBound ? upperBound : this.isValidMinMax(props) ? (maxValue - stepValue) : (100 - stepValue)
             ];
         } else {
-            props.value = typeof value === "number" ? value : this.calculateDefaultValue(this.props)
+            props.value = typeof value === "number" ? value : this.calculateDefaultValue(this.props);
         }
 
         return props;
