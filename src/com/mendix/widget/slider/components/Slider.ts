@@ -1,12 +1,12 @@
-import { Component, createElement, DOM } from "react";
+import { Component, DOM, createElement } from "react";
 
 import * as classNames from "classnames";
 import * as RcSlider from "rc-slider";
 
-import "rc-slider/dist/rc-slider.css";
 import "../ui/Slider.css";
+import "rc-slider/dist/rc-slider.css";
 
-import { ValidationAlert } from "./ValidationAlert";
+import { Alert } from "./Alert";
 
 export interface SliderProps {
     hasError?: boolean;
@@ -48,7 +48,7 @@ export class Slider extends Component<SliderProps, {}> {
 
     render() {
         const alertMessage = this.validateSettings(this.props)
-        || this.validateValues(this.props) || this.props.validationMessage;
+            || this.validateValues(this.props) || this.props.validationMessage;
 
         return DOM.div({ className: classNames("widget-slider", { "has-error": !!alertMessage }) },
             createElement(RcSlider, this.getSliderProps()),
@@ -98,7 +98,7 @@ export class Slider extends Component<SliderProps, {}> {
         }
         if (!props.stepValue || props.stepValue <= 0) {
             message.push(`Step value ${props.stepValue} should be greater than 0`);
-        } else if (validMax && validMin && (props.maxValue - props.minValue) % props.stepValue > 0 ) {
+        } else if (validMax && validMin && (props.maxValue - props.minValue) % props.stepValue > 0) {
             message.push(`Step value is invalid, max - min (${props.maxValue} - ${props.minValue}) 
             should be evenly divisible by the step value ${props.stepValue}`);
         }
@@ -143,7 +143,7 @@ export class Slider extends Component<SliderProps, {}> {
 
     private showError(alertMessage: string | undefined): React.ReactNode {
         if (alertMessage && !this.props.disabled) {
-            return createElement(ValidationAlert, { message: alertMessage });
+            return createElement(Alert, { message: alertMessage });
         } else if (alertMessage) {
             console.log(alertMessage);
         }

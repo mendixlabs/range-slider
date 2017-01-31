@@ -1,11 +1,11 @@
 import { shallow } from "enzyme";
 import { DOM, createElement } from "react";
 
-import { ValidationAlert } from "../ValidationAlert";
+import { Alert } from "../Alert";
 
-describe("ValidationAlert", () => {
+describe("Alert", () => {
     const message = "This is an error";
-    const alert = shallow(createElement(ValidationAlert, { message }));
+    const alert = shallow(createElement(Alert, { message }));
 
     it("renders the structure", () => {
         expect(alert).toBeElement(
