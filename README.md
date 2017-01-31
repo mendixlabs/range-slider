@@ -1,9 +1,11 @@
 # Slider
-Displays a slider.
+Displays a value or range of values on a slider.
 
 ## Features
-* Show a single slider value
-* Show a range slider
+* Show or change a value on a slider
+* Show or change a range of values on a slider
+* Execute a micofrow when a slider value is changed or clicked
+* Show or hide a tooltip on hover
 
 ## Dependencies
 Mendix 6
