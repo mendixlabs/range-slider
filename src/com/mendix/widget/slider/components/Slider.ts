@@ -138,9 +138,8 @@ export class Slider extends Component<SliderProps, {}> {
         if (this.props.value === undefined) {
             return "--";
         }
-        const text = this.validateValues(this.props) ? this.props.value.toString() : value.toString();
 
-        return this.props.tooltipText ? this.props.tooltipText.replace(/\{1}/, text) : text;
+        return this.props.tooltipText ? this.props.tooltipText.replace(/\{1}/, value.toString()) : value.toString();
     }
 
     private showError(alertMessage: string | undefined): React.ReactNode {
