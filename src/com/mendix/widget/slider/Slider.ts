@@ -84,14 +84,14 @@ class Slider extends WidgetBase {
         }
     }
 
-    private onChange(value: number) {
+    private onChange(value: number | number[]) {
         if ((value || value === 0) && !this.showRange) {
             if (value > this.getAttributeValue(this.maxAttribute)) {
                 this.contextObject.set(this.valueAttribute, this.getAttributeValue(this.maxAttribute));
             } else {
                 this.contextObject.set(this.valueAttribute, value);
             }
-        } else if (Array.isArray(value)) {
+        } else if (Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.getAttributeValue(this.lowerBoundAttribute, 0)) {
                 this.contextObject.set(this.lowerBoundAttribute, value[0]);
             } else {
