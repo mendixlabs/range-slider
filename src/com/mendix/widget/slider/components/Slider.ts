@@ -39,7 +39,7 @@ export class Slider extends Component<SliderProps, {}> {
         maxValue: 100,
         minValue: 0,
         noOfMarkers: 2,
-        tooltipText: ""
+        tooltipText: "{1}"
     };
     constructor(props: SliderProps) {
         super(props);
