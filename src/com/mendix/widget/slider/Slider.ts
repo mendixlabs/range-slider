@@ -24,7 +24,7 @@ class Slider extends WidgetBase {
     private contextObject: mendix.lib.MxObject;
 
     postCreate() {
-        this.onClick = this.onClick.bind(this);
+        this.handleAction = this.handleAction.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
@@ -57,7 +57,7 @@ class Slider extends WidgetBase {
             minValue: this.getAttributeValue(this.minAttribute),
             noOfMarkers: this.noOfMarkers,
             onChange: this.onChange,
-            onClick : this.onClick,
+            onClick : this.handleAction,
             showRange: this.showRange,
             stepValue: this.getAttributeValue(this.stepAttribute, this.stepValue),
             tooltipText: this.tooltipText,
@@ -105,13 +105,13 @@ class Slider extends WidgetBase {
         }
     }
 
-    private onClick(value: number) {
+    private handleAction(value: number) {
         if (value || value === 0) {
-            this.executeAction(this.onClickMicroflow, [ this.contextObject.getGuid() ]);
+            this.executeMicroflow(this.onClickMicroflow, [ this.contextObject.getGuid() ]);
         }
     }
 
-    private executeAction(actionname: string, guids: string[]) {
+    private executeMicroflow(actionname: string, guids: string[]) {
         if (actionname) {
             window.mx.ui.action(actionname, {
                 error: (error) => this.updateRendering(`An error occurred while executing microflow: ${error.message}`),
