@@ -41,8 +41,10 @@ export class Slider extends Component<SliderProps, {}> {
         noOfMarkers: 2,
         tooltipText: "{1}"
     };
+
     constructor(props: SliderProps) {
         super(props);
+
         this.getTooltipText = this.getTooltipText.bind(this);
     }
 
