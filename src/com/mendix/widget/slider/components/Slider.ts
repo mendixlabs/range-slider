@@ -146,7 +146,7 @@ export class Slider extends Component<SliderProps, {}> {
         if (alertMessage && !this.props.disabled) {
             return createElement(Alert, { message: alertMessage });
         } else if (alertMessage) {
-            console.log(alertMessage);
+            window.logger.warn(alertMessage);
         }
 
         return null;
