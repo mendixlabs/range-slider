@@ -1,18 +1,18 @@
 {
-  "name": "slider",
+  "name": "rangeslider",
   "version": "0.1.0",
-  "description": "Displays a value or range of values on a slider",
+  "description": "Display range of values on a slider",
   "scripts": {
     "pretest": "tsc",
     "test": "karma start --single-run --sourceMapping && node tests/remap.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mendixlabs/slider"
+    "url": "https://github.com/mendixlabs/range-slider"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mendixlabs/slider/issues"
+    "url": "https://github.com/mendixlabs/range-slider/issues"
   },
   "devDependencies": {
     "@types/big.js": "0.0.31",
@@ -22,8 +22,8 @@
     "@types/enzyme": "^2.4.36",
     "@types/jasmine": "^2.5.35",
     "@types/karma": "^0.13.33",
-    "@types/react": "^15.0.0",
-    "@types/react-dom": "^0.14.17",
+    "@types/react": "^15.0.6",
+    "@types/react-dom": "^0.14.22",
     "check-dependencies": "^1.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "core-js": "^2.4.1",

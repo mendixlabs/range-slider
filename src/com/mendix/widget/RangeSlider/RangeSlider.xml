@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="com.mendix.widget.slider.Slider" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
-    <name>Slider</name>
-    <description>Show slider based on the value, minimum and maximum value</description>
+<widget id="com.mendix.widget.RangeSlider.RangeSlider" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>RangeSlider</name>
+    <description>Display range of values on a slider</description>
     <icon/>
     <properties>
         <property key="minAttribute" type="attribute">
             <caption>Minimum attribute</caption>
-            <category>General</category>
+            <category>Data source</category>
             <description>Holds the minimum slider value</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
@@ -17,7 +17,7 @@
         </property>
         <property key="maxAttribute" type="attribute">
             <caption>Maximum attribute</caption>
-            <category>General</category>
+            <category>Data source</category>
             <description>Holds the maximum slider value</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
@@ -26,25 +26,9 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="valueAttribute" required="false" type="attribute">
-            <caption>Value attribute</caption>
-            <category>Slider</category>
-            <description>The selected value on the slider</description>
-            <attributeTypes>
-                <attributeType name="Integer"/>
-                <attributeType name="Long"/>
-                <attributeType name="Float"/>
-                <attributeType name="Decimal"/>
-            </attributeTypes>
-        </property>
-        <property key="showRange" type="boolean" defaultValue="false">
-            <caption>Show range</caption>
-            <category>Slider interval</category>
-            <description>If true, renders slider with range</description>
-        </property>
         <property key="lowerBoundAttribute" required="false" type="attribute">
             <caption>Lower bound attribute</caption>
-            <category>Slider interval</category>
+            <category>Data source</category>
             <description>The lower bound value on the slider</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
@@ -55,7 +39,7 @@
         </property>
         <property key="upperBoundAttribute" required="false" type="attribute">
             <caption>Upper bound attribute</caption>
-            <category>Slider interval</category>
+            <category>Data source</category>
             <description>The upper bound value on the slider</description>
             <attributeTypes>
                 <attributeType name="Integer"/>

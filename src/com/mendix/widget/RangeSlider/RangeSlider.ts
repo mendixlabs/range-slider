@@ -4,11 +4,10 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { Slider as SliderComponent } from "./components/Slider";
+import { Slider as SliderComponent } from "./components/RangeSlider";
 
-class Slider extends WidgetBase {
+class RangeSlider extends WidgetBase {
     // Properties from Mendix modeler
-    valueAttribute: string;
     lowerBoundAttribute: string;
     upperBoundAttribute: string;
     maxAttribute: string;
@@ -18,7 +17,6 @@ class Slider extends WidgetBase {
     stepAttribute: string;
     noOfMarkers: number;
     tooltipText: string;
-    showRange: boolean;
     decimalPlaces: number;
 
     private contextObject: mendix.lib.MxObject;
@@ -58,11 +56,9 @@ class Slider extends WidgetBase {
             noOfMarkers: this.noOfMarkers,
             onChange: this.onChange,
             onClick : this.handleAction,
-            showRange: this.showRange,
             stepValue: this.getAttributeValue(this.stepAttribute, this.stepValue),
             tooltipText: this.tooltipText,
             upperBound: this.getAttributeValue(this.upperBoundAttribute),
-            value: this.getAttributeValue(this.valueAttribute),
             validationMessage
         }), this.domNode);
     }
@@ -78,20 +74,15 @@ class Slider extends WidgetBase {
     }
 
     private handleValidation(validations: mendix.lib.ObjectValidation[]) {
-        const validationMessage = validations[0].getErrorReason(this.valueAttribute);
+        const validationMessage = validations[0].getErrorReason(this.lowerBoundAttribute)
+            || validations[1].getErrorReason(this.upperBoundAttribute);
         if (validationMessage) {
             this.updateRendering(validationMessage);
         }
     }
 
     private onChange(value: number | number[]) {
-        if ((value || value === 0) && !this.showRange) {
-            if (value > this.getAttributeValue(this.maxAttribute)) {
-                this.contextObject.set(this.valueAttribute, this.getAttributeValue(this.maxAttribute));
-            } else {
-                this.contextObject.set(this.valueAttribute, value);
-            }
-        } else if (Array.isArray(value) && value.length > 0) {
+        if (Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.getAttributeValue(this.lowerBoundAttribute, 0)) {
                 this.contextObject.set(this.lowerBoundAttribute, value[0]);
             } else {
@@ -132,8 +123,8 @@ class Slider extends WidgetBase {
                 guid: this.contextObject.getGuid()
             });
 
-            this.subscribeAttributes([ this.valueAttribute, this.minAttribute, this.maxAttribute, this.stepAttribute,
-                this.lowerBoundAttribute, this.upperBoundAttribute ]);
+            this.subscribeAttributes([ this.lowerBoundAttribute, this.upperBoundAttribute, this.minAttribute,
+            this.maxAttribute, this.stepAttribute ]);
 
             this.subscribe({
                 callback: (validations) => this.handleValidation(validations),
@@ -155,7 +146,7 @@ class Slider extends WidgetBase {
 }
 
 // tslint:disable : only-arrow-functions
-dojoDeclare("com.mendix.widget.slider.Slider", [ WidgetBase ], function(Source: any) {
+dojoDeclare("com.mendix.widget.RangeSlider.RangeSlider", [ WidgetBase ], function(Source: any) {
     const result: any = {};
     for (const property in Source.prototype) {
         if (property !== "constructor" && Source.prototype.hasOwnProperty(property)) {
@@ -163,4 +154,4 @@ dojoDeclare("com.mendix.widget.slider.Slider", [ WidgetBase ], function(Source: 
         }
     }
     return result;
-}(Slider));
+}(RangeSlider));
