@@ -23,7 +23,7 @@ class RangeSlider extends WidgetBase {
 
     postCreate() {
         this.handleAction = this.handleAction.bind(this);
-        this.onChange = this.onChange.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
     }
 
     update(contextObject: mendix.lib.MxObject, callback?: Function) {
@@ -54,8 +54,8 @@ class RangeSlider extends WidgetBase {
             maxValue: this.getAttributeValue(this.maxAttribute),
             minValue: this.getAttributeValue(this.minAttribute),
             noOfMarkers: this.noOfMarkers,
-            onChange: this.onChange,
-            onClick : this.handleAction,
+            onChange: this.handleAction,
+            onUpdate : this.onUpdate,
             stepValue: this.getAttributeValue(this.stepAttribute, this.stepValue),
             tooltipText: this.tooltipText,
             upperBound: this.getAttributeValue(this.upperBoundAttribute),
@@ -81,7 +81,7 @@ class RangeSlider extends WidgetBase {
         }
     }
 
-    private onChange(value: number | number[]) {
+    private onUpdate(value: number | number[]) {
         if (Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.getAttributeValue(this.lowerBoundAttribute, 0)) {
                 this.contextObject.set(this.lowerBoundAttribute, value[0]);

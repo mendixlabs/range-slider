@@ -14,8 +14,8 @@ export interface SliderProps {
     maxValue?: number | null;
     minValue?: number | null;
     validationMessage?: string;
-    onClick?: (value: number) => void;
     onChange?: (value: number) => void;
+    onUpdate?: (value: number) => void;
     stepValue?: number;
     tooltipText?: string | null;
     disabled: boolean;
@@ -65,8 +65,8 @@ export class Slider extends Component<SliderProps, {}> {
                 marks: this.calculateMarks(this.props),
                 max: maxValue,
                 min: minValue,
-                onAfterChange: this.props.onClick,
-                onChange: this.props.onChange,
+                onAfterChange: this.props.onChange,
+                onChange: this.props.onUpdate,
                 pushable: false,
                 range: true,
                 step: stepValue ? stepValue : null,
