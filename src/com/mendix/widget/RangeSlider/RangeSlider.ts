@@ -12,7 +12,7 @@ class RangeSlider extends WidgetBase {
     upperBoundAttribute: string;
     maxAttribute: string;
     minAttribute: string;
-    onClickMicroflow: string;
+    onChangeMicroflow: string;
     stepValue: number;
     stepAttribute: string;
     noOfMarkers: number;
@@ -98,7 +98,7 @@ class RangeSlider extends WidgetBase {
 
     private handleAction(value: number) {
         if (value || value === 0) {
-            this.executeMicroflow(this.onClickMicroflow, [ this.contextObject.getGuid() ]);
+            this.executeMicroflow(this.onChangeMicroflow, [ this.contextObject.getGuid() ]);
         }
     }
 

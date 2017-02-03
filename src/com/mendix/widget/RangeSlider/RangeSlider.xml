@@ -48,8 +48,8 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="onClickMicroflow" type="microflow" required="false">
-            <caption>On click microflow</caption>
+        <property key="onChangeMicroflow" type="microflow" required="false">
+            <caption>On change microflow</caption>
             <category>Behavior</category>
             <description>Called when the slider is clicked or changed</description>
             <returnType type="Void"/>
@@ -83,7 +83,7 @@
         <property key="decimalPlaces" type="integer" required="true" defaultValue="1">
             <caption>Decimal places</caption>
             <category>Appearance</category>
-            <description>Number of decimal places to show on a value</description>
+            <description>Number of decimal places</description>
         </property>
     </properties>
 </widget>
