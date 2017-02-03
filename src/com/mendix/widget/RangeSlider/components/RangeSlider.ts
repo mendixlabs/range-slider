@@ -15,7 +15,7 @@ export interface SliderProps {
     minValue?: number | null;
     validationMessage?: string;
     onChange?: (value: number) => void;
-    onUpdate?: (value: number) => void;
+    onUpdate?: (value: number | number[]) => void;
     stepValue?: number;
     tooltipText?: string | null;
     disabled: boolean;

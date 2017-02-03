@@ -81,7 +81,7 @@ class RangeSlider extends WidgetBase {
         }
     }
 
-    private onUpdate(value: number | number[]) {
+    private onUpdate(value: number[]) {
         if (Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.getAttributeValue(this.lowerBoundAttribute, 0)) {
                 this.contextObject.set(this.lowerBoundAttribute, value[0]);

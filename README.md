@@ -2,7 +2,7 @@
 Displays range of values on a slider.
 
 ## Features
-* Change a range of values on a slider
+* Change lower bound and upper bound values on the slider
 * Execute a microflow when a slider value is changed or clicked
 * Show or hide a tooltip on hover
 
