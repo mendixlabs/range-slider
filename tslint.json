@@ -10,7 +10,7 @@
         "no-arg": true,
         "no-bitwise": true,
         "no-conditional-assignment": true,
-        "no-console": [true],
+        "no-console": [ true ],
         "no-debugger": true,
         "no-duplicate-key": true,
         "no-duplicate-variable": true,
@@ -54,7 +54,7 @@
             "check-type"
         ],
         "interface-name": [ false, "always-prefix" ],        
-        "no-multi-spaces": [true],
+        "no-multi-spaces": [ true ],
         "no-extra-semi": true,
         "no-irregular-whitespace": true,
         "no-duplicate-case": true,

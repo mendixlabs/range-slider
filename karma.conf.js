@@ -15,12 +15,12 @@ module.exports = function(config) {
     if (config.sourceMapping) {
         Object.assign(webpackConfig, {
             module: Object.assign(webpackConfig.module, {
-                postLoaders: [{
+                postLoaders: [ {
                     test: /\.ts$/,
                     loader: "istanbul-instrumenter",
                     include: path.resolve(__dirname, "src"),
                     exclude: /\.(spec)\.ts$/
-                }]
+                } ]
             })
         });
     }
