@@ -69,7 +69,7 @@ export class Slider extends Component<SliderProps, {}> {
                 onChange: this.props.onUpdate,
                 pushable: false,
                 range: true,
-                step: stepValue ? stepValue : null,
+                step: stepValue,
                 tipFormatter: this.props.tooltipText ? this.getTooltipText : null,
                 value: [ validLowerBound, validUpperBound ]
             }),
