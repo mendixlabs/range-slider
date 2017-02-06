@@ -67,7 +67,7 @@
         <property key="stepAttribute" type="attribute" required="false">
             <caption>Step attribute</caption>
             <category>Appearance</category>
-            <description>Holds the value for the number of points to shift when sliding</description>
+            <description>Holds the value for the interval between two points(numbers)</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
