@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="com.mendix.widget.RangeSlider.RangeSlider" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+<widget id="com.mendix.widget.custom.RangeSlider.RangeSlider" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
     <name>RangeSlider</name>
     <description>Display range of values on a slider</description>
     <icon/>
