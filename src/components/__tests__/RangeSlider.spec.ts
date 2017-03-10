@@ -3,13 +3,11 @@ import { createElement, DOM } from "react";
 
 import * as RcSlider from "rc-slider";
 
-import { Slider as SliderComponent, SliderProps } from "../RangeSlider";
-
-import { Alert } from "../Alert";
+import { RangeSlider, RangeSliderProps } from "../RangeSlider";
 
 describe("RangeSlider", () => {
-    let sliderProps: SliderProps;
-    let rangeSlider: ShallowWrapper<SliderProps, any>;
+    let sliderProps: RangeSliderProps;
+    let rangeSlider: ShallowWrapper<RangeSliderProps, any>;
     const upperBound = 40;
     const maxValue = 100;
     const lowerBound = 20;
@@ -28,7 +26,7 @@ describe("RangeSlider", () => {
             upperBound
         };
     });
-    const renderSlider = (props: SliderProps) => shallow(createElement(SliderComponent, props));
+    const renderSlider = (props: RangeSliderProps) => shallow(createElement(RangeSlider, props));
 
     it("renders the structure", () => {
         rangeSlider = renderSlider(sliderProps);
@@ -44,124 +42,11 @@ describe("RangeSlider", () => {
                     range: true,
                     step: stepValue,
                     tipFormatter: jasmine.any(Function) as any,
+                    value: [ lowerBound, upperBound ],
                     vertical: false
                 })
             )
         );
-    });
-
-    describe("shows an error when the", () => {
-        it("maximum value is not set", () => {
-            sliderProps.maxValue = null;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe("Maximum value is required");
-        });
-
-        it("minimum value is not set", () => {
-            sliderProps.minValue = null;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe("Minimum value is required");
-        });
-
-        it("minimum value is greater than or equal to the maximum value", () => {
-            sliderProps.minValue = 50;
-            sliderProps.maxValue = 30;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe(
-                `Minimum value ${sliderProps.minValue} should be less than the maximum value ${sliderProps.maxValue}`
-            );
-        });
-
-        it("lower bound value is not set", () => {
-            sliderProps.lowerBound = null;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe("Lower bound value is required");
-        });
-
-        it("lower bound value is less than the minimum value", () => {
-            sliderProps.lowerBound = -5;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe(
-                `Lower bound ${sliderProps.lowerBound} should be greater than the minimum ${sliderProps.minValue}`
-            );
-        });
-
-        it("lower bound value is greater than the maximum value", () => {
-            sliderProps.lowerBound = 50;
-            sliderProps.maxValue = 30;
-            sliderProps.upperBound = 30;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe(
-                `Lower bound ${sliderProps.lowerBound} should be less than the maximum ${sliderProps.maxValue}`
-            );
-        });
-
-        it("upper bound value is not set", () => {
-            sliderProps.upperBound = null;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe("Upper bound value is required");
-        });
-
-        it("upper bound value is less than the minimum value", () => {
-            sliderProps.upperBound = -5;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe(
-                `Upper bound ${sliderProps.upperBound} should be greater than the minimum ${sliderProps.minValue}`
-            );
-        });
-
-        it("upper bound value is greater than the maximum value", () => {
-            sliderProps.upperBound = 130;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe(
-                `Upper bound ${sliderProps.upperBound} should be less than the maximum ${sliderProps.maxValue}`
-            );
-        });
-    });
-
-    describe("with the step value specified shows an error", () => {
-        it("when the step value is equal to 0", () => {
-            sliderProps.stepValue = 0;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe("Step value 0 should be greater than 0");
-        });
-
-        it("when the step value is less than 0", () => {
-            sliderProps.stepValue = -10;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe("Step value -10 should be greater than 0");
-        });
-
-        it("when the step value does not evenly divide (maximum - minimum)", () => {
-            sliderProps.stepValue = 6;
-            rangeSlider = renderSlider(sliderProps);
-            const alert = rangeSlider.find(Alert);
-
-            expect(alert.props().message).toBe(`Step value is invalid, max - min (100 - 0) 
-            should be evenly divisible by the step value 6`);
-        });
     });
 
     describe("with the marker value", () => {

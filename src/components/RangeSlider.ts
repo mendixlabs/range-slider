@@ -8,12 +8,11 @@ import "../ui/RangeSlider.css";
 
 import { Alert } from "./Alert";
 
-export interface SliderProps {
-    hasError?: boolean;
+export interface RangeSliderProps {
     noOfMarkers?: number;
-    maxValue?: number | null;
-    minValue?: number | null;
-    validationMessage?: string;
+    maxValue?: number;
+    minValue?: number;
+    alertMessage?: string;
     onChange?: (value: number) => void;
     onUpdate?: (value: number | number[]) => void;
     stepValue?: number;
@@ -31,8 +30,8 @@ interface Marks {
     };
 }
 
-export class Slider extends Component<SliderProps, {}> {
-    static defaultProps: SliderProps = {
+export class RangeSlider extends Component<RangeSliderProps, {}> {
+    static defaultProps: RangeSliderProps = {
         disabled: false,
         maxValue: 100,
         minValue: 0,
@@ -40,27 +39,28 @@ export class Slider extends Component<SliderProps, {}> {
         tooltipText: "{1}"
     };
 
-    constructor(props: SliderProps) {
+    constructor(props: RangeSliderProps) {
         super(props);
 
         this.getTooltipText = this.getTooltipText.bind(this);
     }
 
     render() {
-        const { maxValue, minValue, stepValue, lowerBound, upperBound } = this.props;
-        const alertMessage = this.validateSettings(this.props)
-            || this.validateValues(this.props) || this.props.validationMessage;
-        const validLowerBound = typeof lowerBound === "number"
-            ? lowerBound
-            : this.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
-        const validUpperBound = typeof upperBound === "number"
-            ? upperBound
-            : this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
-
+        const { alertMessage, maxValue, minValue, stepValue, lowerBound, upperBound } = this.props;
+        let validLowerBound = 0;
+        let validUpperBound = 0;
+        if (typeof minValue === "number" && typeof maxValue === "number" && typeof stepValue === "number") {
+            validLowerBound = typeof lowerBound === "number"
+                ? lowerBound
+                : this.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
+            validUpperBound = typeof upperBound === "number"
+                ? upperBound
+                : this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
+        }
         return DOM.div({ className: classNames("widget-slider", { "has-error": !!alertMessage }) },
             createElement(RcSlider, {
                 defaultValue: [ validLowerBound, validUpperBound ],
-                disabled: !!alertMessage || this.props.disabled,
+                disabled: this.props.disabled,
                 included: true,
                 marks: this.calculateMarks(this.props),
                 max: maxValue,
@@ -77,67 +77,25 @@ export class Slider extends Component<SliderProps, {}> {
         );
     }
 
-    private calculateMarks(props: SliderProps): Marks {
+    private calculateMarks(props: RangeSliderProps): Marks {
         const marks: Marks = {};
-        if (this.isValidMinMax(props) && props.noOfMarkers >= 2) {
-            const interval = (props.maxValue - props.minValue) / (props.noOfMarkers - 1);
-            for (let i = 0; i < props.noOfMarkers; i++) {
-                const value = parseFloat((props.minValue + (i * interval)).toFixed(props.decimalPlaces));
-                marks[value] = value;
+        const { noOfMarkers, maxValue, minValue } = props;
+        if (typeof noOfMarkers === "number" && typeof maxValue === "number" && typeof minValue === "number") {
+            if (this.isValidMinMax(props) && noOfMarkers >= 2) {
+                const interval = (maxValue - minValue) / (noOfMarkers - 1);
+                for (let i = 0; i < noOfMarkers; i++) {
+                    const value = parseFloat((minValue + (i * interval)).toFixed(props.decimalPlaces));
+                    marks[value] = value;
+                }
             }
         }
+
         return marks;
     }
 
-    private isValidMinMax(props: SliderProps): boolean {
+    private isValidMinMax(props: RangeSliderProps): boolean {
         const { maxValue, minValue } = props;
         return typeof maxValue === "number" && typeof minValue === "number" && minValue < maxValue;
-    }
-
-    private validateSettings(props: SliderProps): string {
-        const message: string[] = [];
-        const validMax = typeof props.maxValue === "number";
-        const validMin = typeof props.minValue === "number";
-        if (!validMax) {
-            message.push("Maximum value is required");
-        }
-        if (!validMin) {
-            message.push("Minimum value is required");
-        }
-        if (typeof props.lowerBound !== "number") {
-            message.push("Lower bound value is required");
-        }
-        if (typeof props.upperBound !== "number") {
-            message.push("Upper bound value is required");
-        }
-        if (validMin && validMax && (props.minValue >= props.maxValue)) {
-            message.push(`Minimum value ${props.minValue} should be less than the maximum value ${props.maxValue}`);
-        }
-        if (!props.stepValue || props.stepValue <= 0) {
-            message.push(`Step value ${props.stepValue} should be greater than 0`);
-        } else if (validMax && validMin && (props.maxValue - props.minValue) % props.stepValue > 0) {
-            message.push(`Step value is invalid, max - min (${props.maxValue} - ${props.minValue}) 
-            should be evenly divisible by the step value ${props.stepValue}`);
-        }
-
-        return message.join(", ");
-    }
-
-    private validateValues(props: SliderProps): string {
-        const message: string[] = [];
-        if (props.lowerBound > props.maxValue) {
-            message.push(`Lower bound ${props.lowerBound} should be less than the maximum ${props.maxValue}`);
-        }
-        if (props.lowerBound < props.minValue) {
-            message.push(`Lower bound ${props.lowerBound} should be greater than the minimum ${props.minValue}`);
-        }
-        if (props.upperBound > props.maxValue) {
-            message.push(`Upper bound ${props.upperBound} should be less than the maximum ${props.maxValue}`);
-        }
-        if (props.upperBound < props.minValue) {
-            message.push(`Upper bound ${props.upperBound} should be greater than the minimum ${props.minValue}`);
-        }
-        return message.join(", ");
     }
 
     private getTooltipText(value: number): string {
