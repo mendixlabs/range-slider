@@ -72,6 +72,10 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
         this.updateValues(newProps.contextObject);
     }
 
+    componentWillUnmount() {
+        this.unSubscribe();
+    }
+
     private getAttributeValue(
         contextObject: mendix.lib.MxObject,
         attributeName: string,
