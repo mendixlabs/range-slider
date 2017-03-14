@@ -2,10 +2,10 @@ import { Component, createElement } from "react";
 
 import { RangeSlider } from "./RangeSlider";
 
-export interface RangeSliderContainerProps {
-    contextObject: mendix.lib.MxObject;
-    maximumAttribute: string;
-    minimumAttribute: string;
+interface RangeSliderContainerProps {
+    mxObject: mendix.lib.MxObject;
+    maxAttribute: string;
+    minAttribute: string;
     onChangeMicroflow: string;
     stepValue: number;
     stepAttribute: string;
@@ -25,29 +25,30 @@ interface RangeSliderContainerState {
     upperBoundValue?: number;
     stepValue?: number;
 }
-export class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSliderContainerState> {
+
+class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSliderContainerState> {
     private subscriptionHandles: number[];
 
     constructor(props: RangeSliderContainerProps) {
         super(props);
 
         this.state = {
-            lowerBoundValue: this.getAttributeValue(props.contextObject, props.lowerBoundAttribute),
-            maximumValue: this.getAttributeValue(props.contextObject, props.maximumAttribute),
-            minimumValue: this.getAttributeValue(props.contextObject, props.minimumAttribute),
-            stepValue: this.getAttributeValue(props.contextObject, props.stepAttribute, props.stepValue),
-            upperBoundValue: this.getAttributeValue(props.contextObject, props.upperBoundAttribute)
+            lowerBoundValue: this.getAttributeValue(props.mxObject, props.lowerBoundAttribute),
+            maximumValue: this.getAttributeValue(props.mxObject, props.maxAttribute),
+            minimumValue: this.getAttributeValue(props.mxObject, props.minAttribute),
+            stepValue: this.getAttributeValue(props.mxObject, props.stepAttribute, props.stepValue),
+            upperBoundValue: this.getAttributeValue(props.mxObject, props.upperBoundAttribute)
         };
         this.subscriptionHandles = [];
-        this.resetSubscriptions(props.contextObject);
+        this.resetSubscriptions(props.mxObject);
         this.handleAction = this.handleAction.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
     }
 
     render() {
-        const disabled = !this.props.contextObject
+        const disabled = !this.props.mxObject
             || this.props.readOnly
-            || !!(this.props.stepAttribute && this.props.contextObject.isReadonlyAttr(this.props.stepAttribute));
+            || !!(this.props.stepAttribute && this.props.mxObject.isReadonlyAttr(this.props.stepAttribute));
 
         const alertMessage = this.validateSettings() || this.validateValues();
 
@@ -68,8 +69,8 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
     }
 
     componentWillReceiveProps(newProps: RangeSliderContainerProps) {
-        this.resetSubscriptions(newProps.contextObject);
-        this.updateValues(newProps.contextObject);
+        this.resetSubscriptions(newProps.mxObject);
+        this.updateValues(newProps.mxObject);
     }
 
     componentWillUnmount() {
@@ -90,18 +91,18 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
     }
 
     private onUpdate(value: number[]) {
-        const { contextObject, lowerBoundAttribute, upperBoundAttribute } = this.props;
+        const { mxObject, lowerBoundAttribute, upperBoundAttribute } = this.props;
         if (Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.state.lowerBoundValue) {
-                contextObject.set(lowerBoundAttribute, value[0]);
+                mxObject.set(lowerBoundAttribute, value[0]);
             } else {
                 if (this.state.maximumValue && value[1] > this.state.maximumValue) {
-                    contextObject.set(
+                    mxObject.set(
                         upperBoundAttribute,
-                        this.getAttributeValue(contextObject, this.props.maximumAttribute)
+                        this.getAttributeValue(mxObject, this.props.maxAttribute)
                     );
                 } else {
-                    contextObject.set(upperBoundAttribute, value[1]);
+                    mxObject.set(upperBoundAttribute, value[1]);
                 }
 
             }
@@ -111,8 +112,8 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
     private updateValues(contextObject: mendix.lib.MxObject) {
         this.setState({
             lowerBoundValue: this.getAttributeValue(contextObject, this.props.lowerBoundAttribute),
-            maximumValue: this.getAttributeValue(contextObject, this.props.maximumAttribute),
-            minimumValue: this.getAttributeValue(contextObject, this.props.minimumAttribute),
+            maximumValue: this.getAttributeValue(contextObject, this.props.maxAttribute),
+            minimumValue: this.getAttributeValue(contextObject, this.props.minAttribute),
             stepValue: this.getAttributeValue(contextObject, this.props.stepAttribute, this.props.stepValue),
             upperBoundValue: this.getAttributeValue(contextObject, this.props.upperBoundAttribute)
         });
@@ -120,7 +121,7 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
 
     private handleAction(value: number) {
         if (value || value === 0) {
-            this.executeMicroflow(this.props.onChangeMicroflow, this.props.contextObject.getGuid());
+            this.executeMicroflow(this.props.onChangeMicroflow, this.props.mxObject.getGuid());
         }
     }
 
@@ -149,9 +150,9 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
             [
                 this.props.upperBoundAttribute,
                 this.props.lowerBoundAttribute,
-                this.props.maximumAttribute,
-                this.props.maximumAttribute,
-                this.props.minimumAttribute,
+                this.props.maxAttribute,
+                this.props.maxAttribute,
+                this.props.minAttribute,
                 this.props.stepAttribute
             ].forEach((attr) =>
                 this.subscriptionHandles.push(window.mx.data.subscribe({
@@ -223,3 +224,5 @@ export class RangeSliderContainer extends Component<RangeSliderContainerProps, R
         return message.join(", ");
     }
 }
+
+export { RangeSliderContainer as default, RangeSliderContainerProps };
