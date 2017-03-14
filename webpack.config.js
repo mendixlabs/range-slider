@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: "./src/RangeSlider.ts",
+    entry: "./src/components/RangeSliderContainer.ts",
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
         filename: "src/com/mendix/widget/custom/RangeSlider/RangeSlider.js",
@@ -25,15 +25,15 @@ module.exports = {
         ]
     },
     devtool: "source-map",
-    externals: [ "mxui/widget/_WidgetBase", "dojo/_base/declare" ],
+    externals: [ "react", "react-dom" ],
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
             { from: "src/**/*.xml" }
         ], {
-            copyUnmodified: true
-        }),
-        new ExtractTextPlugin("./src/com/mendix/widget/custom/RangeSlider/ui/RangeSlider.css")
+                copyUnmodified: true
+            }),
+        new ExtractTextPlugin("./src/com/mendix/widget/custom/slider/ui/Slider.css")
     ],
     watch: true
 };
