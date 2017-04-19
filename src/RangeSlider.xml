@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="com.mendix.widget.custom.RangeSlider.RangeSlider" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+<widget id="com.mendix.widget.custom.RangeSlider.RangeSlider" needsEntityContext="true" offlineCapable="true" xmlns="http://www.mendix.com/widget/1.0/">
     <name>RangeSlider</name>
-    <description>Display range of values on a slider</description>
+    <description>Change range of values using a slider</description>
     <icon/>
     <properties>
         <property key="minAttribute" type="attribute">
@@ -57,7 +57,7 @@
         <property key="noOfMarkers" type="integer" required="true" defaultValue="2">
             <caption>Number of Markers</caption>
             <category>Appearance</category>
-            <description>Visible when larger than 2</description>
+            <description>Marker ticks on the slider (visible when larger than 2)</description>
         </property>
         <property key="tooltipText" type="string" required="false" defaultValue="{1}">
             <caption>Tooltip text</caption>
@@ -83,7 +83,7 @@
         <property key="decimalPlaces" type="integer" required="true" defaultValue="1">
             <caption>Decimal places</caption>
             <category>Appearance</category>
-            <description>Number of decimal places</description>
+            <description>Number of decimal places for marker values</description>
         </property>
     </properties>
 </widget>
