@@ -33,13 +33,12 @@ describe("RangeSlider", () => {
 
         expect(rangeSlider).toBeElement(
             DOM.div({ className: "widget-slider" },
-                createElement(RcSlider, {
+                createElement(RcSlider.Range, {
                     defaultValue: [ lowerBound, upperBound ],
                     disabled: false,
                     included: true,
                     max: maxValue,
                     min: minValue,
-                    range: true,
                     step: stepValue,
                     tipFormatter: jasmine.any(Function) as any,
                     value: [ lowerBound, upperBound ],

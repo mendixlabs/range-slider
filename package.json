@@ -24,6 +24,8 @@
     "@types/karma": "^0.13.33",
     "@types/react": "^15.0.6",
     "@types/react-dom": "^0.14.22",
+    "@types/rc-slider": "^6.1.2",
+    "@types/rc-tooltip": "^3.4.6",
     "check-dependencies": "^1.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "core-js": "^2.4.1",
@@ -51,7 +53,9 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.1",
     "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git",
+    "react": "~15.3.2",
     "react-addons-test-utils": "~15.3.2",
+    "react-dom": "~15.3.2",
     "remap-istanbul": "^0.8.4",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
@@ -64,8 +68,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "rc-slider": "^5.4.0",
-    "react": "~15.3.2",
-    "react-dom": "~15.3.2"
+    "rc-slider": "^7.0.1",
+    "rc-tooltip": "^3.4.3"
   }
 }

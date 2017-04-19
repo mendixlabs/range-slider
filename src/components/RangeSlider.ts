@@ -1,12 +1,20 @@
-import { Component, createElement, DOM } from "react";
+import { Component, createElement, DOM, ReactNode } from "react";
 
 import * as classNames from "classnames";
 import * as RcSlider from "rc-slider";
+import * as Tooltip from "rc-tooltip";
 
 import "rc-slider/dist/rc-slider.css";
 import "../ui/RangeSlider.css";
 
 import { Alert } from "./Alert";
+
+interface TooltipProps {
+    value: number;
+    className: string;
+    vertical: boolean;
+    offset: number;
+}
 
 export interface RangeSliderProps {
     noOfMarkers?: number;
@@ -18,35 +26,18 @@ export interface RangeSliderProps {
     stepValue?: number;
     tooltipText?: string | null;
     disabled: boolean;
-    lowerBound?: number | null;
-    upperBound?: number | null;
+    lowerBound?: number;
+    upperBound?: number;
     decimalPlaces?: number;
-}
-
-interface Marks {
-    [key: number]: string | number | {
-        style: HTMLStyleElement,
-        label: string
-    };
 }
 
 export class RangeSlider extends Component<RangeSliderProps, {}> {
     static defaultProps: RangeSliderProps = {
         disabled: false,
-        maxValue: 100,
-        minValue: 0,
-        noOfMarkers: 2,
-        tooltipText: "{1}"
     };
 
-    constructor(props: RangeSliderProps) {
-        super(props);
-
-        this.getTooltipText = this.getTooltipText.bind(this);
-    }
-
     render() {
-        const { alertMessage, maxValue, minValue, stepValue, lowerBound, upperBound } = this.props;
+        const { alertMessage, maxValue, minValue, stepValue, lowerBound, upperBound, tooltipText } = this.props;
         let validLowerBound = 0;
         let validUpperBound = 0;
         if (typeof minValue === "number" && typeof maxValue === "number" && typeof stepValue === "number") {
@@ -58,9 +49,10 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
                 : this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
         }
         return DOM.div({ className: classNames("widget-slider", { "has-error": !!alertMessage }) },
-            createElement(RcSlider, {
+            createElement(RcSlider.Range, {
                 defaultValue: [ validLowerBound, validUpperBound ],
                 disabled: this.props.disabled,
+                handle: tooltipText ? this.createTooltip(tooltipText) : undefined,
                 included: true,
                 marks: this.calculateMarks(this.props),
                 max: maxValue,
@@ -68,24 +60,22 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
                 onAfterChange: this.props.onChange,
                 onChange: this.props.onUpdate,
                 pushable: false,
-                range: true,
                 step: stepValue,
-                tipFormatter: this.props.tooltipText ? this.getTooltipText : null,
                 value: [ validLowerBound, validUpperBound ]
             }),
             alertMessage && !this.props.disabled ? createElement(Alert, { message: alertMessage }) : null
         );
     }
-
-    private calculateMarks(props: RangeSliderProps): Marks {
-        const marks: Marks = {};
+    
+    private calculateMarks(props: RangeSliderProps): RcSlider.Marks {
+        const marks: RcSlider.Marks = {};
         const { noOfMarkers, maxValue, minValue } = props;
         if (typeof noOfMarkers === "number" && typeof maxValue === "number" && typeof minValue === "number") {
             if (this.isValidMinMax(props) && noOfMarkers >= 2) {
                 const interval = (maxValue - minValue) / (noOfMarkers - 1);
                 for (let i = 0; i < noOfMarkers; i++) {
                     const value = parseFloat((minValue + (i * interval)).toFixed(props.decimalPlaces));
-                    marks[value] = value;
+                    marks[value] = value.toString();
                 }
             }
         }
@@ -98,11 +88,26 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
         return typeof maxValue === "number" && typeof minValue === "number" && minValue < maxValue;
     }
 
-    private getTooltipText(value: number): string {
-        if (this.props.lowerBound === undefined || this.props.upperBound === undefined) {
-            return "--";
-        }
+    private createTooltip(text: string): (props: TooltipProps) => ReactNode {
+        return (props) => {
+            const sliderText = (this.props.lowerBound === undefined || this.props.upperBound === undefined)
+                ? "--"
+                : text.replace(/\{1}/, props.value.toString());
 
-        return this.props.tooltipText ? this.props.tooltipText.replace(/\{1}/, value.toString()) : value.toString();
+            return createElement(Tooltip,
+                {
+                    mouseLeaveDelay: 0,
+                    overlay: DOM.div(null, sliderText),
+                    placement: "top",
+                    prefixCls: "rc-slider-tooltip",
+                    trigger: [ "hover", "click", "focus" ]
+                },
+                createElement(RcSlider.Handle, {
+                    className: props.className,
+                    offset: props.offset,
+                    vertical: props.vertical
+                })
+            );
+        };
     }
 }
