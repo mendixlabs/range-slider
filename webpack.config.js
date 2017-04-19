@@ -11,29 +11,32 @@ module.exports = {
         libraryTarget:  "umd"
     },
     resolve: {
-        extensions: [ "", ".ts", ".js", ".json" ],
+        extensions: [ ".ts", ".js" ],
         alias: {
             "tests": path.resolve(__dirname, "./tests")
         }
     },
-    errorDetails: true,
     module: {
-        loaders: [
+        rules: [
             { test: /\.ts$/, loader: "ts-loader" },
-            { test: /\.json$/, loader: "json" },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") }
+            { test: /\.css$/, loader: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: "css-loader"
+            }) },
+            { test: /\.scss$/, loader: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: [
+                    { loader: "css-loader" },
+                    { loader: "sass-loader" }
+                ]
+            }) }
         ]
     },
     devtool: "source-map",
     externals: [ "react", "react-dom" ],
     plugins: [
-        new CopyWebpackPlugin([
-            { from: "src/**/*.js" },
-            { from: "src/**/*.xml" }
-        ], {
-                copyUnmodified: true
-            }),
-        new ExtractTextPlugin("./src/com/mendix/widget/custom/slider/ui/Slider.css")
-    ],
-    watch: true
+        new CopyWebpackPlugin([ { from: "src/**/*.xml" } ], { copyUnmodified: true }),
+        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/custom/RangeSlider/ui/RangeSlider.css" }),
+        new webpack.LoaderOptionsPlugin({ debug: true })
+    ]
 };

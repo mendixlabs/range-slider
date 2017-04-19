@@ -1,7 +1,6 @@
+const webpackConfig = require("./webpack.config");
 const path = require("path");
-var webpackConfig = require("./webpack.config");
 Object.assign(webpackConfig, {
-    debug: true,
     devtool: "inline-source-map",
     externals: [
         "react/lib/ExecutionEnvironment",
@@ -15,12 +14,13 @@ module.exports = function(config) {
     if (config.sourceMapping) {
         Object.assign(webpackConfig, {
             module: Object.assign(webpackConfig.module, {
-                postLoaders: [ {
+                rules: webpackConfig.module.rules.concat([ {
                     test: /\.ts$/,
-                    loader: "istanbul-instrumenter",
+                    enforce: "post",
+                    loader: "istanbul-instrumenter-loader",
                     include: path.resolve(__dirname, "src"),
                     exclude: /\.(spec)\.ts$/
-                } ]
+                } ])
             })
         });
     }
@@ -29,15 +29,15 @@ module.exports = function(config) {
         basePath: "",
         frameworks: [ "jasmine" ],
         files: [
-            { pattern: "src/**/*.ts", watched: true },
-            { pattern: "tests/**/*.ts", watched: true },
+            { pattern: "src/**/*.ts", watched: true, included: false, served: false },
+            { pattern: "tests/**/*.ts", watched: true, included: false, served: false },
             "tests/test-index.js"
         ],
         exclude: [],
         preprocessors: { "tests/test-index.js": [ "webpack", "sourcemap" ] },
         webpack: webpackConfig,
         webpackServer: { noInfo: true },
-        reporters: [ "progress", config.sourceMapping ? "coverage": "kjhtml" ],
+        reporters: [ "progress", config.sourceMapping ? "coverage" : "kjhtml" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -46,7 +46,7 @@ module.exports = function(config) {
         singleRun: false,
         concurrency: Infinity,
         coverageReporter: {
-            dir: "./dist/testresults", 
+            dir: "./dist/testresults",
             reporters: [
                 { type: "json", subdir: ".", file: "coverage.json" },
                 { type: "text" }
