@@ -5,7 +5,7 @@ import * as RcSlider from "rc-slider";
 import * as Tooltip from "rc-tooltip";
 
 import "rc-slider/dist/rc-slider.css";
-import "../ui/RangeSlider.css";
+import "../ui/RangeSlider.scss";
 
 import { Alert } from "./Alert";
 
@@ -14,9 +14,11 @@ interface TooltipProps {
     className: string;
     vertical: boolean;
     offset: number;
+    index: number;
 }
 
-export interface RangeSliderProps {
+interface RangeSliderProps {
+    bootstrapStyle?: BootstrapStyle;
     noOfMarkers?: number;
     maxValue?: number;
     minValue?: number;
@@ -31,7 +33,9 @@ export interface RangeSliderProps {
     decimalPlaces?: number;
 }
 
-export class RangeSlider extends Component<RangeSliderProps, {}> {
+type BootstrapStyle = "primary" | "inverse" | "success" | "info" | "warning" | "danger";
+
+class RangeSlider extends Component<RangeSliderProps, {}> {
     static defaultProps: RangeSliderProps = {
         disabled: false,
     };
@@ -48,9 +52,15 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
                 ? upperBound
                 : this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
         }
-        return DOM.div({ className: classNames("widget-slider", { "has-error": !!alertMessage }) },
+        return DOM.div({
+            className: classNames(
+                "widget-range-slider",
+                `widget-range-slider-${this.props.bootstrapStyle}`,
+                { "has-error": !!alertMessage }
+            )
+        },
             createElement(RcSlider.Range, {
-                defaultValue: [ validLowerBound, validUpperBound ],
+                defaultValue: [validLowerBound, validUpperBound],
                 disabled: this.props.disabled,
                 handle: tooltipText ? this.createTooltip(tooltipText) : undefined,
                 included: true,
@@ -61,7 +71,7 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
                 onChange: this.props.onUpdate,
                 pushable: false,
                 step: stepValue,
-                value: [ validLowerBound, validUpperBound ]
+                value: [validLowerBound, validUpperBound]
             }),
             alertMessage && !this.props.disabled ? createElement(Alert, { message: alertMessage }) : null
         );
@@ -104,6 +114,7 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
                 },
                 createElement(RcSlider.Handle, {
                     className: props.className,
+                    key: props.index,
                     offset: props.offset,
                     vertical: props.vertical
                 })
@@ -111,3 +122,5 @@ export class RangeSlider extends Component<RangeSliderProps, {}> {
         };
     }
 }
+
+export { BootstrapStyle, RangeSlider, RangeSliderProps };

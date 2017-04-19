@@ -85,5 +85,18 @@
             <category>Appearance</category>
             <description>Number of decimal places for marker values</description>
         </property>
+        <property key="bootstrapStyle" type="enumeration" defaultValue="primary">
+            <caption>Bootstrap style</caption>
+            <category>Appearance</category>
+            <description>Bootstrap color to apply to the range slider</description>
+            <enumerationValues>
+                <enumerationValue key="primary">Primary</enumerationValue>
+                <enumerationValue key="inverse">Inverse</enumerationValue>
+                <enumerationValue key="info">Info</enumerationValue>
+                <enumerationValue key="success">Success</enumerationValue>
+                <enumerationValue key="warning">Warning</enumerationValue>
+                <enumerationValue key="danger">Danger</enumerationValue>
+            </enumerationValues>
+        </property>
     </properties>
 </widget>

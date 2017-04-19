@@ -32,7 +32,7 @@ describe("RangeSlider", () => {
         rangeSlider = renderSlider(sliderProps);
 
         expect(rangeSlider).toBeElement(
-            DOM.div({ className: "widget-slider" },
+            DOM.div({ className: "widget-range-slider" },
                 createElement(RcSlider.Range, {
                     defaultValue: [ lowerBound, upperBound ],
                     disabled: false,

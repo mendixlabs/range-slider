@@ -1,8 +1,9 @@
 import { Component, createElement } from "react";
 
-import { RangeSlider } from "./RangeSlider";
+import { BootstrapStyle, RangeSlider } from "./RangeSlider";
 
 interface RangeSliderContainerProps {
+    bootstrapStyle: BootstrapStyle;
     mxObject: mendix.lib.MxObject;
     maxAttribute: string;
     minAttribute: string;
@@ -54,6 +55,7 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
 
         return createElement(RangeSlider, {
             alertMessage,
+            bootstrapStyle: this.props.bootstrapStyle,
             decimalPlaces: this.props.decimalPlaces,
             disabled,
             lowerBound: this.state.lowerBoundValue,
