@@ -2,6 +2,7 @@ import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
 
 import * as RcSlider from "rc-slider";
+import { Alert } from "../Alert";
 
 import { RangeSlider, RangeSliderProps } from "../RangeSlider";
 
@@ -15,8 +16,10 @@ describe("RangeSlider", () => {
     const stepValue = 1;
     const noOfMarkers = 0;
     const marks: RcSlider.Marks = { 0: "0", 25: "25", 50: "50", 75: "75", 100: "100" };
+    const bootstrapStyle = "primary";
     beforeEach(() => {
         sliderProps = {
+            bootstrapStyle,
             disabled: false,
             lowerBound,
             maxValue,
@@ -33,34 +36,57 @@ describe("RangeSlider", () => {
         rangeSlider = renderSlider(sliderProps);
 
         expect(rangeSlider).toBeElement(
-            DOM.div({ className: "widget-range-slider" },
+            DOM.div({ className: "widget-range-slider widget-range-slider-primary" },
                 createElement(RcSlider.Range, {
                     defaultValue: [ lowerBound, upperBound ],
                     disabled: false,
+                    handle: jasmine.any(Function) as any,
                     included: true,
                     max: maxValue,
                     min: minValue,
                     step: stepValue,
-                    tipFormatter: jasmine.any(Function) as any,
                     value: [ lowerBound, upperBound ],
                     vertical: false
-                })
+                }), createElement(Alert, { message: "" })
             )
         );
     });
 
+
+
+    it("with both invalid lower bound and maximum values, renders with the calculated lower bound value", () => {
+        sliderProps.maxValue = -10;
+        sliderProps.lowerBound = undefined;
+        const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
+
+        expect(RcSliderComponent.props().value).toEqual([ stepValue, upperBound ]);
+    });
+
+    it("with both invalid upper bound and maximum values, renders with the calculated upper bound value", () => {
+        sliderProps.maxValue = -10;
+        sliderProps.upperBound = undefined;
+        const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
+
+        expect(RcSliderComponent.props().value).toEqual([ lowerBound, (maxValue - stepValue) ]);
+    });
+
     describe("with the marker value", () => {
+        it("undefined, renders no markers", () => {
+            sliderProps.noOfMarkers = undefined;
+            const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
+
+            expect(RcSliderComponent.props().marks).toEqual({});
+        });
+
         it("less than 2 renders no markers", () => {
-            rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
+            const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
 
             expect(RcSliderComponent.props().marks).toEqual({});
         });
 
         it("greater than 2 renders markers on the slider", () => {
             sliderProps.noOfMarkers = 5;
-            rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
+            const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
 
             expect(RcSliderComponent.props().marks).toEqual(marks);
         });
@@ -70,42 +96,35 @@ describe("RangeSlider", () => {
         it("renders a tooltip title with the correct text", () => {
             sliderProps.tooltipText = "RangeSlider";
             rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
 
-            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.tooltipText)).toBe("RangeSlider");
+            const sliderInstance = rangeSlider.instance() as any;
+            spyOn(sliderInstance, "createTooltip").and.callThrough();
+            rangeSlider.setProps({ tooltipText: sliderProps.tooltipText });
+
+            expect(sliderInstance.createTooltip).toHaveBeenCalledWith(sliderProps.tooltipText);
         });
 
-        it("renders a tooltip with '--' when no lower bound value is specified", () => {
+        it("renders '--' as the tooltip title when no lower bound or upper bound value is specified", () => {
             sliderProps.lowerBound = undefined;
-            rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
-
-            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.tooltipText)).toBe("--");
-        });
-
-        it("renders a tooltip with '--' when no upper bound value is specified", () => {
             sliderProps.upperBound = undefined;
             rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
 
-            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.tooltipText)).toBe("--");
+            const sliderInstance = rangeSlider.instance() as any;
+            spyOn(sliderInstance, "createTooltip").and.callThrough();
+            rangeSlider.setProps({ tooltipText: sliderProps.tooltipText });
+
+            expect(sliderInstance.createTooltip).toHaveBeenCalledWith(sliderProps.tooltipText);
         });
+    });
 
-        it("renders no tooltip title when value is empty", () => {
-            sliderProps.tooltipText = "";
-            rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
+    it("without tooltip text renders no tooltip", () => {
+        sliderProps.tooltipText = "";
+        rangeSlider = renderSlider(sliderProps);
 
-            expect(RcSliderComponent.props().tipFormatter).toBeNull();
-        });
+        const sliderInstance = rangeSlider.instance() as any;
+        spyOn(sliderInstance, "createTooltip");
+        rangeSlider.setProps({ tooltipText: sliderProps.tooltipText });
 
-        it("with a tooltipText template renders a tooltip with the substituted value", () => {
-            rangeSlider = renderSlider(sliderProps);
-            const RcSliderComponent = rangeSlider.find(RcSlider);
-
-            expect((RcSliderComponent.props() as any).tipFormatter(sliderProps.lowerBound)).toBe(
-                `${sliderProps.lowerBound}`
-            );
-        });
+        expect(sliderInstance.createTooltip).not.toHaveBeenCalled();
     });
 });
