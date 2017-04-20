@@ -9,7 +9,8 @@
     "target": "es5",
     "types": [
       "mendix-client",
-      "jasmine"
+      "jasmine",
+      "core-js"
     ],
     "moduleResolution": "node",
     "declaration": false,

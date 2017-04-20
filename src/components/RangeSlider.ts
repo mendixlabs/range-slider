@@ -1,4 +1,4 @@
-import { Component, createElement, DOM, ReactNode } from "react";
+import { Component, DOM, ReactNode, createElement } from "react";
 
 import * as classNames from "classnames";
 import * as RcSlider from "rc-slider";
@@ -19,6 +19,7 @@ interface TooltipProps {
 
 interface RangeSliderProps {
     bootstrapStyle?: BootstrapStyle;
+    className?: string;
     noOfMarkers?: number;
     maxValue?: number;
     minValue?: number;
@@ -26,6 +27,7 @@ interface RangeSliderProps {
     onChange?: (value: number) => void;
     onUpdate?: (value: number | number[]) => void;
     stepValue?: number;
+    style?: object;
     tooltipText?: string | null;
     disabled: boolean;
     lowerBound?: number;
@@ -37,7 +39,7 @@ type BootstrapStyle = "primary" | "inverse" | "success" | "info" | "warning" | "
 
 class RangeSlider extends Component<RangeSliderProps, {}> {
     static defaultProps: RangeSliderProps = {
-        disabled: false,
+        disabled: false
     };
 
     render() {
@@ -56,11 +58,13 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
             className: classNames(
                 "widget-range-slider",
                 `widget-range-slider-${this.props.bootstrapStyle}`,
+                this.props.className,
                 { "has-error": !!alertMessage }
-            )
+            ),
+            style: this.props.style
         },
             createElement(RcSlider.Range, {
-                defaultValue: [validLowerBound, validUpperBound],
+                defaultValue: [ validLowerBound, validUpperBound ],
                 disabled: this.props.disabled,
                 handle: tooltipText ? this.createTooltip(tooltipText) : undefined,
                 included: true,
@@ -71,12 +75,12 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
                 onChange: this.props.onUpdate,
                 pushable: false,
                 step: stepValue,
-                value: [validLowerBound, validUpperBound]
+                value: [ validLowerBound, validUpperBound ]
             }),
             createElement(Alert, { message: alertMessage })
         );
     }
-    
+
     private calculateMarks(props: RangeSliderProps): RcSlider.Marks {
         const marks: RcSlider.Marks = {};
         const { noOfMarkers, maxValue, minValue } = props;

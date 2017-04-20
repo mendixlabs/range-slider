@@ -1,5 +1,5 @@
-import { shallow, ShallowWrapper } from "enzyme";
-import { createElement, DOM } from "react";
+import { ShallowWrapper, shallow } from "enzyme";
+import { DOM, createElement } from "react";
 
 import * as RcSlider from "rc-slider";
 
@@ -14,6 +14,7 @@ describe("RangeSlider", () => {
     const minValue = 0;
     const stepValue = 1;
     const noOfMarkers = 0;
+    const marks: RcSlider.Marks = { 0: "0", 25: "25", 50: "50", 75: "75", 100: "100" };
     beforeEach(() => {
         sliderProps = {
             disabled: false,
@@ -61,7 +62,7 @@ describe("RangeSlider", () => {
             rangeSlider = renderSlider(sliderProps);
             const RcSliderComponent = rangeSlider.find(RcSlider);
 
-            expect(RcSliderComponent.props().marks).toEqual({ 0: 0, 25: 25, 50: 50, 75: 75, 100: 100 });
+            expect(RcSliderComponent.props().marks).toEqual(marks);
         });
     });
 

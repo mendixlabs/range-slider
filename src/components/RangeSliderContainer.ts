@@ -2,9 +2,14 @@ import { Component, createElement } from "react";
 
 import { BootstrapStyle, RangeSlider } from "./RangeSlider";
 
-interface RangeSliderContainerProps {
+interface WrapperProps {
+    class?: string;
+    mxObject?: mendix.lib.MxObject;
+    style?: string;
+}
+
+interface RangeSliderContainerProps extends WrapperProps {
     bootstrapStyle: BootstrapStyle;
-    mxObject: mendix.lib.MxObject;
     maxAttribute: string;
     minAttribute: string;
     onChangeMicroflow: string;
@@ -29,33 +34,28 @@ interface RangeSliderContainerState {
 
 class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSliderContainerState> {
     private subscriptionHandles: number[];
+    private attributeCallback: (mxObject: mendix.lib.MxObject) => () => void;
 
     constructor(props: RangeSliderContainerProps) {
         super(props);
 
-        this.state = {
-            lowerBoundValue: this.getAttributeValue(props.mxObject, props.lowerBoundAttribute),
-            maximumValue: this.getAttributeValue(props.mxObject, props.maxAttribute),
-            minimumValue: this.getAttributeValue(props.mxObject, props.minAttribute),
-            stepValue: this.getAttributeValue(props.mxObject, props.stepAttribute, props.stepValue),
-            upperBoundValue: this.getAttributeValue(props.mxObject, props.upperBoundAttribute)
-        };
+        this.state = this.updateValues(props.mxObject);
         this.subscriptionHandles = [];
-        this.resetSubscriptions(props.mxObject);
         this.handleAction = this.handleAction.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
+        this.attributeCallback = mxObject => () => this.setState(this.updateValues(mxObject));
     }
 
     render() {
         const disabled = !this.props.mxObject
-            || this.props.readOnly
             || !!(this.props.stepAttribute && this.props.mxObject.isReadonlyAttr(this.props.stepAttribute));
 
-        const alertMessage = this.validateSettings() || this.validateValues();
+        const alertMessage = !disabled ? this.validateSettings() || this.validateValues() : "";
 
         return createElement(RangeSlider, {
             alertMessage,
             bootstrapStyle: this.props.bootstrapStyle,
+            className: this.props.class,
             decimalPlaces: this.props.decimalPlaces,
             disabled,
             lowerBound: this.state.lowerBoundValue,
@@ -65,6 +65,7 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
             onChange: this.handleAction,
             onUpdate: this.onUpdate,
             stepValue: this.state.stepValue,
+            style: RangeSliderContainer.parseStyle(this.props.style),
             tooltipText: this.props.tooltipText,
             upperBound: this.state.upperBoundValue
         });
@@ -72,36 +73,23 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
 
     componentWillReceiveProps(newProps: RangeSliderContainerProps) {
         this.resetSubscriptions(newProps.mxObject);
-        this.updateValues(newProps.mxObject);
+        this.setState(this.updateValues(newProps.mxObject));
     }
 
     componentWillUnmount() {
-        this.unSubscribe();
-    }
-
-    private getAttributeValue(
-        contextObject: mendix.lib.MxObject,
-        attributeName: string,
-        defaultValue?: number): number | undefined {
-            if (contextObject && attributeName) {
-                if (contextObject.get(attributeName) !== "") {
-                    return parseFloat(contextObject.get(attributeName) as string);
-                }
-        }
-
-            return defaultValue;
+        this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
     }
 
     private onUpdate(value: number[]) {
         const { mxObject, lowerBoundAttribute, upperBoundAttribute } = this.props;
-        if (Array.isArray(value) && value.length > 0) {
+        if (mxObject && Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.state.lowerBoundValue) {
                 mxObject.set(lowerBoundAttribute, value[0]);
             } else {
                 if (this.state.maximumValue && value[1] > this.state.maximumValue) {
                     mxObject.set(
                         upperBoundAttribute,
-                        this.getAttributeValue(mxObject, this.props.maxAttribute)
+                        this.getValue(this.props.maxAttribute, mxObject)
                     );
                 } else {
                     mxObject.set(upperBoundAttribute, value[1]);
@@ -111,18 +99,18 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
         }
     }
 
-    private updateValues(contextObject: mendix.lib.MxObject) {
-        this.setState({
-            lowerBoundValue: this.getAttributeValue(contextObject, this.props.lowerBoundAttribute),
-            maximumValue: this.getAttributeValue(contextObject, this.props.maxAttribute),
-            minimumValue: this.getAttributeValue(contextObject, this.props.minAttribute),
-            stepValue: this.getAttributeValue(contextObject, this.props.stepAttribute, this.props.stepValue),
-            upperBoundValue: this.getAttributeValue(contextObject, this.props.upperBoundAttribute)
-        });
+    private updateValues(mxObject?: mendix.lib.MxObject): RangeSliderContainerState {
+        return {
+            lowerBoundValue: this.getValue(this.props.lowerBoundAttribute, mxObject, undefined),
+            maximumValue: this.getValue(this.props.maxAttribute, mxObject, undefined),
+            minimumValue: this.getValue(this.props.minAttribute, mxObject, undefined),
+            stepValue: this.getValue(this.props.stepAttribute, mxObject, this.props.stepValue),
+            upperBoundValue: this.getValue(this.props.upperBoundAttribute, mxObject, undefined)
+        };
     }
 
     private handleAction(value: number) {
-        if (value || value === 0) {
+        if ((value || value === 0) && this.props.mxObject) {
             this.executeMicroflow(this.props.onChangeMicroflow, this.props.mxObject.getGuid());
         }
     }
@@ -141,32 +129,28 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
         }
     }
 
-    private resetSubscriptions(contextObject: mendix.lib.MxObject) {
-        this.unSubscribe();
+    private resetSubscriptions(mxObject?: mendix.lib.MxObject) {
+        this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
+        this.subscriptionHandles = [];
 
-        if (contextObject) {
-            this.subscriptionHandles.push(window.mx.data.subscribe({
-                callback: () => this.updateValues(contextObject),
-                guid: contextObject.getGuid()
-            }));
-            [
+        if (mxObject) {
+            const attributes = [
                 this.props.upperBoundAttribute,
                 this.props.lowerBoundAttribute,
                 this.props.maxAttribute,
-                this.props.maxAttribute,
                 this.props.minAttribute,
                 this.props.stepAttribute
-            ].forEach((attr) =>
-                this.subscriptionHandles.push(window.mx.data.subscribe({
-                    attr,
-                    callback: () => this.updateValues(contextObject),
-                    guid: contextObject.getGuid()
-                })));
+            ];
+            this.subscriptionHandles = attributes.map(attr => window.mx.data.subscribe({
+                attr,
+                callback: this.attributeCallback(mxObject),
+                guid: mxObject.getGuid()
+            }));
+            this.subscriptionHandles.push(window.mx.data.subscribe({
+                callback: this.attributeCallback(mxObject),
+                guid: mxObject.getGuid()
+            }));
         }
-    }
-
-    private unSubscribe() {
-        this.subscriptionHandles.forEach((handle) => window.mx.data.unsubscribe(handle));
     }
 
     private validateSettings(): string {
@@ -193,7 +177,7 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
             if (!stepValue || stepValue <= 0) {
                 message.push(`Step value ${stepValue} should be greater than 0`);
             } else if (validMax && validMin && (maximumValue - minimumValue) % stepValue > 0) {
-                message.push(`Step value is invalid, max - min (${maximumValue} - ${minimumValue}) 
+                message.push(`Step value is invalid, max - min (${maximumValue} - ${minimumValue})
             should be evenly divisible by the step value ${stepValue}`);
             }
         }
@@ -225,6 +209,34 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
 
         return message.join(", ");
     }
+
+    private getValue(attributeName: string, mxObject?: mendix.lib.MxObject, defaultValue?: number): number | undefined {
+        if (mxObject && attributeName) {
+            if (mxObject.get(attributeName) !== "") {
+                return parseFloat(mxObject.get(attributeName) as string);
+            }
+        }
+
+        return defaultValue;
+    }
+
+    private static parseStyle(style = ""): { [key: string]: string } {
+        try {
+            return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
+                const pair = line.split(":");
+                if (pair.length === 2) {
+                    const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
+                    styleObject[name] = pair[1].trim();
+                }
+                return styleObject;
+            }, {});
+        } catch (error) {
+            console.log("Failed to parse style", style, error);
+        }
+
+        return {};
+    }
+
 }
 
 export { RangeSliderContainer as default, RangeSliderContainerProps };
