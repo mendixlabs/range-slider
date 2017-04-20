@@ -52,8 +52,6 @@ describe("RangeSlider", () => {
         );
     });
 
-
-
     it("with both invalid lower bound and maximum values, renders with the calculated lower bound value", () => {
         sliderProps.maxValue = -10;
         sliderProps.lowerBound = undefined;
