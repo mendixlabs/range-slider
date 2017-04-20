@@ -73,7 +73,7 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
                 step: stepValue,
                 value: [validLowerBound, validUpperBound]
             }),
-            alertMessage && !this.props.disabled ? createElement(Alert, { message: alertMessage }) : null
+            createElement(Alert, { message: alertMessage })
         );
     }
     
