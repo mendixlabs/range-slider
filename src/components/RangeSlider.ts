@@ -43,28 +43,20 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
     };
 
     render() {
-        const { alertMessage, maxValue, minValue, stepValue, lowerBound, upperBound, tooltipText } = this.props;
-        let validLowerBound = 0;
-        let validUpperBound = 0;
-        if (typeof minValue === "number" && typeof maxValue === "number" && typeof stepValue === "number") {
-            validLowerBound = typeof lowerBound === "number"
-                ? lowerBound
-                : this.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
-            validUpperBound = typeof upperBound === "number"
-                ? upperBound
-                : this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
-        }
+        const { alertMessage, maxValue, minValue, lowerBound, upperBound, stepValue, tooltipText } = this.props;
+        const rangeSliderValues = this.getValidBounds();
         return DOM.div({
             className: classNames(
                 "widget-range-slider",
                 `widget-range-slider-${this.props.bootstrapStyle}`,
                 this.props.className,
-                { "has-error": !!alertMessage }
+                { "has-error": !!alertMessage },
+                { "widget-range-slider-no-value": (typeof lowerBound !== "number" || typeof upperBound !== "number") }
             ),
             style: this.props.style
         },
             createElement(RcSlider.Range, {
-                defaultValue: [ validLowerBound, validUpperBound ],
+                defaultValue: rangeSliderValues,
                 disabled: this.props.disabled,
                 handle: tooltipText ? this.createTooltip(tooltipText) : undefined,
                 included: true,
@@ -75,10 +67,29 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
                 onChange: this.props.onUpdate,
                 pushable: false,
                 step: stepValue,
-                value: [ validLowerBound, validUpperBound ]
+                value: rangeSliderValues
             }),
             createElement(Alert, { message: alertMessage })
         );
+    }
+
+    private getValidBounds(): number[] {
+        const { maxValue, minValue, stepValue, lowerBound, upperBound } = this.props;
+        let validLowerBound = 0;
+        let validUpperBound = 0;
+        if (typeof minValue === "number" && typeof maxValue === "number" && typeof stepValue === "number") {
+            if (typeof lowerBound === "number") {
+                validLowerBound = lowerBound;
+            } else {
+                validLowerBound = this.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
+            }
+            if (typeof upperBound === "number") {
+                validUpperBound = upperBound;
+            } else {
+                validUpperBound = this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
+            }
+        }
+        return [ validLowerBound, validUpperBound ];
     }
 
     private calculateMarks(props: RangeSliderProps): RcSlider.Marks {
