@@ -11,7 +11,6 @@
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
-                <attributeType name="Float"/>
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
@@ -22,7 +21,6 @@
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
-                <attributeType name="Float"/>
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
@@ -33,7 +31,6 @@
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
-                <attributeType name="Float"/>
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
@@ -44,7 +41,6 @@
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
-                <attributeType name="Float"/>
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
@@ -54,7 +50,7 @@
             <description>Called when the slider is clicked or changed</description>
             <returnType type="Void"/>
         </property>
-        <property key="noOfMarkers" type="integer" required="true" defaultValue="2">
+        <property key="noOfMarkers" type="integer" defaultValue="2">
             <caption>Number of Markers</caption>
             <category>Appearance</category>
             <description>Marker ticks on the slider (visible when larger than 2)</description>
@@ -71,16 +67,15 @@
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
-                <attributeType name="Float"/>
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
-        <property key="stepValue" type="integer" required="true" defaultValue="10">
+        <property key="stepValue" type="integer" defaultValue="10">
             <caption>Step value</caption>
             <category>Appearance</category>
             <description>Number of points to shift when sliding (Used if step attribute is not set)</description>
         </property>
-        <property key="decimalPlaces" type="integer" required="true" defaultValue="1">
+        <property key="decimalPlaces" type="integer" defaultValue="1">
             <caption>Decimal places</caption>
             <category>Appearance</category>
             <description>Number of decimal places for marker values</description>
