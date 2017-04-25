@@ -1,5 +1,6 @@
 {
   "name": "rangeslider",
+  "widgetName": "RangeSlider",
   "version": "1.0.0",
   "description": "Change a range of values on a slider",
   "scripts": {
@@ -15,9 +16,8 @@
     "url": "https://github.com/mendixlabs/range-slider/issues"
   },
   "devDependencies": {
-    "@types/big.js": "0.0.31",
     "@types/classnames": "0.0.32",
-    "@types/core-js": "^0.9.36",
+    "@types/core-js": "0.9.36",
     "@types/dojo": "^1.9.37",
     "@types/enzyme": "^2.7.6",
     "@types/jasmine": "^2.5.41",
@@ -52,11 +52,12 @@
     "karma-remap-istanbul": "^0.6.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.3",
-    "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git",
+    "mendix-client": "https://github.com/FlockOfBirds/Mendix-client-typing/archive/7.1.0.tar.gz",
     "node-sass": "^4.5.2",
     "react": "~15.5.3",
     "react-addons-test-utils": "~15.5.1",
     "react-dom": "~15.5.3",
+    "react-test-renderer": "^15.5.4",
     "remap-istanbul": "^0.9.1",
     "sass-loader": "^6.0.3",
     "source-map-loader": "^0.2.0",
