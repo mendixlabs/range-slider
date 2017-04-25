@@ -1,10 +1,11 @@
 # Range Slider
-Displays range of values on a slider.
+Change a range of values using a slider.
 
 ## Features
-* Change lower bound and upper bound values on the slider
+* Adjust lower bound and upper bound values on the slider
 * Execute a microflow when a slider value is changed or clicked
 * Show or hide a tooltip on hover
+* Render range slider with different bootstrap colors
 
 ## Dependencies
 Mendix 7.1
