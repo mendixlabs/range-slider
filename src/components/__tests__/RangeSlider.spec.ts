@@ -17,6 +17,8 @@ describe("RangeSlider", () => {
     const noOfMarkers = 0;
     const marks: RcSlider.Marks = { 0: "0", 25: "25", 50: "50", 75: "75", 100: "100" };
     const bootstrapStyle = "primary";
+    const defaultMaxValue = 0;
+    const defaultMinValue = 0;
 
     beforeEach(() => {
         sliderProps = {
@@ -67,6 +69,13 @@ describe("RangeSlider", () => {
         const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
 
         expect(RcSliderComponent.props().value).toEqual([ lowerBound, (maxValue - stepValue) ]);
+    });
+
+    it("with invalid maximum or minimum value, renders with default values", () => {
+        sliderProps.maxValue = undefined;
+        const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
+
+        expect(RcSliderComponent.props().value).toEqual([ defaultMaxValue, defaultMinValue ]);
     });
 
     describe("with the marker value", () => {
