@@ -1,13 +1,12 @@
 import { Component, DOM, ReactNode, createElement } from "react";
-
 import * as classNames from "classnames";
+
 import * as RcSlider from "rc-slider";
 import * as Tooltip from "rc-tooltip";
+import { Alert } from "./Alert";
 
 import "rc-slider/dist/rc-slider.css";
 import "../ui/RangeSlider.scss";
-
-import { Alert } from "./Alert";
 
 interface TooltipProps {
     value: number;
@@ -60,7 +59,7 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
                 disabled: this.props.disabled,
                 handle: tooltipText ? this.createTooltip(tooltipText) : undefined,
                 included: true,
-                marks: this.calculateMarks(this.props),
+                marks: RangeSlider.calculateMarks(this.props),
                 max: maxValue,
                 min: minValue,
                 onAfterChange: this.props.onChange,
@@ -81,22 +80,23 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
             if (typeof lowerBound === "number") {
                 validLowerBound = lowerBound;
             } else {
-                validLowerBound = this.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
+                validLowerBound = RangeSlider.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
             }
             if (typeof upperBound === "number") {
                 validUpperBound = upperBound;
             } else {
-                validUpperBound = this.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
+                validUpperBound = RangeSlider.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
             }
         }
+
         return [ validLowerBound, validUpperBound ];
     }
 
-    private calculateMarks(props: RangeSliderProps): RcSlider.Marks {
+    private static calculateMarks(props: RangeSliderProps): RcSlider.Marks {
         const marks: RcSlider.Marks = {};
         const { noOfMarkers, maxValue, minValue } = props;
         if (typeof noOfMarkers === "number" && typeof maxValue === "number" && typeof minValue === "number") {
-            if (this.isValidMinMax(props) && noOfMarkers >= 2) {
+            if (RangeSlider.isValidMinMax(props) && noOfMarkers >= 2) {
                 const interval = (maxValue - minValue) / (noOfMarkers - 1);
                 for (let i = 0; i < noOfMarkers; i++) {
                     const value = parseFloat((minValue + (i * interval)).toFixed(props.decimalPlaces));
@@ -108,8 +108,9 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
         return marks;
     }
 
-    private isValidMinMax(props: RangeSliderProps): boolean {
+    private static isValidMinMax(props: RangeSliderProps): boolean {
         const { maxValue, minValue } = props;
+
         return typeof maxValue === "number" && typeof minValue === "number" && minValue < maxValue;
     }
 

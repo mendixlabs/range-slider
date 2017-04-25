@@ -17,6 +17,7 @@ describe("RangeSlider", () => {
     const noOfMarkers = 0;
     const marks: RcSlider.Marks = { 0: "0", 25: "25", 50: "50", 75: "75", 100: "100" };
     const bootstrapStyle = "primary";
+
     beforeEach(() => {
         sliderProps = {
             bootstrapStyle,
@@ -52,7 +53,7 @@ describe("RangeSlider", () => {
         );
     });
 
-    it("with both invalid lower bound and maximum values, renders with the calculated lower bound value", () => {
+    it("with invalid lower bound and maximum values, renders with the calculated lower bound value", () => {
         sliderProps.maxValue = -10;
         sliderProps.lowerBound = undefined;
         const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
@@ -60,7 +61,7 @@ describe("RangeSlider", () => {
         expect(RcSliderComponent.props().value).toEqual([ stepValue, upperBound ]);
     });
 
-    it("with both invalid upper bound and maximum values, renders with the calculated upper bound value", () => {
+    it("with invalid upper bound and maximum values, renders with the calculated upper bound value", () => {
         sliderProps.maxValue = -10;
         sliderProps.upperBound = undefined;
         const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
@@ -82,7 +83,7 @@ describe("RangeSlider", () => {
             expect(RcSliderComponent.props().marks).toEqual({});
         });
 
-        it("greater than 2 renders markers on the slider", () => {
+        it("greater than 2 renders markers", () => {
             sliderProps.noOfMarkers = 5;
             const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
 

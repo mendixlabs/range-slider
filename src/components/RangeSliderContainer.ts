@@ -32,9 +32,9 @@ interface RangeSliderContainerState {
     stepValue?: number;
 }
 
-class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSliderContainerState> {
+export default class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSliderContainerState> {
     private subscriptionHandles: number[];
-    private attributeCallback: (mxObject: mendix.lib.MxObject) => () => void;
+    private subscriptionCallback: (mxObject: mendix.lib.MxObject) => () => void;
 
     constructor(props: RangeSliderContainerProps) {
         super(props);
@@ -43,7 +43,7 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
         this.subscriptionHandles = [];
         this.handleAction = this.handleAction.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
-        this.attributeCallback = mxObject => () => this.setState(this.updateValues(mxObject));
+        this.subscriptionCallback = mxObject => () => this.setState(this.updateValues(mxObject));
     }
 
     render() {
@@ -87,10 +87,7 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
                 mxObject.set(lowerBoundAttribute, value[0]);
             } else {
                 if (this.state.maximumValue && value[1] > this.state.maximumValue) {
-                    mxObject.set(
-                        upperBoundAttribute,
-                        this.getValue(this.props.maxAttribute, mxObject)
-                    );
+                    mxObject.set(upperBoundAttribute, this.getValue(this.props.maxAttribute, mxObject));
                 } else {
                     mxObject.set(upperBoundAttribute, value[1]);
                 }
@@ -143,11 +140,11 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
             ];
             this.subscriptionHandles = attributes.map(attr => window.mx.data.subscribe({
                 attr,
-                callback: this.attributeCallback(mxObject),
+                callback: this.subscriptionCallback(mxObject),
                 guid: mxObject.getGuid()
             }));
             this.subscriptionHandles.push(window.mx.data.subscribe({
-                callback: this.attributeCallback(mxObject),
+                callback: this.subscriptionCallback(mxObject),
                 guid: mxObject.getGuid()
             }));
         }
@@ -238,5 +235,3 @@ class RangeSliderContainer extends Component<RangeSliderContainerProps, RangeSli
     }
 
 }
-
-export { RangeSliderContainer as default, RangeSliderContainerProps };
