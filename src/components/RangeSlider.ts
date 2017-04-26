@@ -44,6 +44,7 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
     render() {
         const { alertMessage, maxValue, minValue, lowerBound, upperBound, stepValue, tooltipText } = this.props;
         const rangeSliderValues = this.getValidBounds();
+
         return DOM.div({
             className: classNames(
                 "widget-range-slider",
