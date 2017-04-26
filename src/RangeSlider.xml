@@ -2,7 +2,7 @@
 <widget id="com.mendix.widget.custom.RangeSlider.RangeSlider" needsEntityContext="true" offlineCapable="true" xmlns="http://www.mendix.com/widget/1.0/">
     <name>RangeSlider</name>
     <description>Change range of values using a slider</description>
-    <icon/>
+    <icon>iVBORw0KGgoAAAANSUhEUgAAAA8AAAAKCAYAAABrGwT5AAAAAXNSR0IArs4c6QAAARJJREFUKBVjZMABamtr9ZmZmc3//v17srm5+SI2ZUzYBMvLy/X//PljUV9fPxNEg/jY1GEVKy4uzgDa+P/379//QTSIj00hCzbBHz9+MAJtZPj37x8DExMTA4iPTR2LpqZm+MePH+WQJW/fvm0JtJEBZAALCwsDkO8qJSXFg6yGn5//EYuOjo7oxIkTu5Aljh07xgB0Mljz////GdLS0gKtrKwCkdXk5+fnMubl5fkDQ1USWeLt27eOEyZMCPv16xcDGxsbQ0FBwSphYeH9yGqALnuOzIezPTw88l69evX/8ePH/0E0iA+XRGJgjaoPHz4wgwKKlZUVHGAgPpIeOBNraD969Oi5lpZWGUwVMNCwOhEA7DF7VrZb3vwAAAAASUVORK5CYII=</icon>
     <properties>
         <property key="minAttribute" type="attribute">
             <caption>Minimum attribute</caption>
