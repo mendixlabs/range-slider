@@ -1,6 +1,10 @@
 @import "./variables";
 
 .widget-range-slider {
+    padding: 5px 10px;
+    margin-bottom: 15px;
+    overflow: hidden;
+
     .rc-slider-handle, .rc-slider-dot-active {
         border: 2px solid $brand-default;
     }
@@ -26,16 +30,6 @@
             background-color: transparent;
         }
     }
-}
-
-/* Default margins and padding */
-.widget-range-slider {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-bottom: 15px;
-    overflow: hidden;
 }
 
 .widget-range-slider-no-value {
