@@ -55,7 +55,7 @@ describe("RangeSlider", () => {
         );
     });
 
-    it("with invalid lower bound and maximum values, renders with the calculated lower bound value", () => {
+    it("with invalid lower bound and maximum values renders with the calculated lower bound value", () => {
         sliderProps.maxValue = -10;
         sliderProps.lowerBound = undefined;
         const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
@@ -63,7 +63,7 @@ describe("RangeSlider", () => {
         expect(RcSliderComponent.props().value).toEqual([ stepValue, upperBound ]);
     });
 
-    it("with invalid upper bound and maximum values, renders with the calculated upper bound value", () => {
+    it("with invalid upper bound and maximum values renders with the calculated upper bound value", () => {
         sliderProps.maxValue = -10;
         sliderProps.upperBound = undefined;
         const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
@@ -71,7 +71,7 @@ describe("RangeSlider", () => {
         expect(RcSliderComponent.props().value).toEqual([ lowerBound, (maxValue - stepValue) ]);
     });
 
-    it("with invalid maximum or minimum value, renders with default values", () => {
+    it("with an invalid maximum or minimum value renders with default values", () => {
         sliderProps.maxValue = undefined;
         const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
 
@@ -79,7 +79,7 @@ describe("RangeSlider", () => {
     });
 
     describe("with the marker value", () => {
-        it("undefined, renders no markers", () => {
+        it("undefined renders no markers", () => {
             sliderProps.noOfMarkers = undefined;
             const RcSliderComponent = renderSlider(sliderProps).find(RcSlider.Range);
 
