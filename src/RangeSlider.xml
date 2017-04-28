@@ -7,7 +7,7 @@
         <property key="minAttribute" type="attribute">
             <caption>Minimum attribute</caption>
             <category>Data source</category>
-            <description>Holds the minimum slider value</description>
+            <description>Holds the minimum value that can be selected</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -17,7 +17,7 @@
         <property key="maxAttribute" type="attribute">
             <caption>Maximum attribute</caption>
             <category>Data source</category>
-            <description>Holds the maximum slider value</description>
+            <description>Holds the maximum value that can be selected</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
