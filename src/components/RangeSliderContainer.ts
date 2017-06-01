@@ -4,8 +4,9 @@ import { BootstrapStyle, RangeSlider } from "./RangeSlider";
 
 interface WrapperProps {
     class?: string;
-    mxObject?: mendix.lib.MxObject;
+    mxObject: mendix.lib.MxObject;
     style?: string;
+    readOnly: boolean;
 }
 
 export interface RangeSliderContainerProps extends WrapperProps {
@@ -47,8 +48,7 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
     }
 
     render() {
-        const disabled = !this.props.mxObject
-            || !!(this.props.stepAttribute && this.props.mxObject.isReadonlyAttr(this.props.stepAttribute));
+        const disabled = !this.props.mxObject || this.props.readOnly;
 
         const alertMessage = !disabled
             ? RangeSliderContainer.validateSettings(this.state) || this.validateValues()
