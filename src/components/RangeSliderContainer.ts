@@ -8,7 +8,7 @@ interface WrapperProps {
     style?: string;
 }
 
-interface RangeSliderContainerProps extends WrapperProps {
+export interface RangeSliderContainerProps extends WrapperProps {
     bootstrapStyle: BootstrapStyle;
     maxAttribute: string;
     minAttribute: string;
@@ -50,7 +50,9 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
         const disabled = !this.props.mxObject
             || !!(this.props.stepAttribute && this.props.mxObject.isReadonlyAttr(this.props.stepAttribute));
 
-        const alertMessage = !disabled ? this.validateSettings() || this.validateValues() : "";
+        const alertMessage = !disabled
+            ? RangeSliderContainer.validateSettings(this.state) || this.validateValues()
+            : "";
 
         return createElement(RangeSlider, {
             alertMessage,
@@ -78,6 +80,55 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
 
     componentWillUnmount() {
         this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
+    }
+
+    public static parseStyle(style = ""): { [key: string]: string } {
+        try {
+            return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
+                const pair = line.split(":");
+                if (pair.length === 2) {
+                    const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
+                    styleObject[name] = pair[1].trim();
+                }
+                return styleObject;
+            }, {});
+        } catch (error) {
+            console.log("Failed to parse style", style, error);
+        }
+
+        return {};
+    }
+
+    public static validateSettings(state: RangeSliderContainerState): string {
+        const message: string[] = [];
+        const { minimumValue, maximumValue, lowerBoundValue, upperBoundValue, stepValue } = state;
+        const validMax = typeof maximumValue === "number";
+        const validMin = typeof minimumValue === "number";
+        if (!validMax) {
+            message.push("Maximum value is required");
+        }
+        if (!validMin) {
+            message.push("Minimum value is required");
+        }
+        if (typeof lowerBoundValue !== "number") {
+            message.push("Lower bound value is required");
+        }
+        if (typeof upperBoundValue !== "number") {
+            message.push("Upper bound value is required");
+        }
+        if (typeof maximumValue === "number" && typeof minimumValue === "number") {
+            if (validMin && validMax && (minimumValue >= maximumValue)) {
+                message.push(`Minimum value ${minimumValue} should be less than the maximum value ${maximumValue}`);
+            }
+            if (!stepValue || stepValue <= 0) {
+                message.push(`Step value ${stepValue} should be greater than 0`);
+            } else if (validMax && validMin && (maximumValue - minimumValue) % stepValue > 0) {
+                message.push(`Step value is invalid, max - min (${maximumValue} - ${minimumValue})
+            should be evenly divisible by the step value ${stepValue}`);
+            }
+        }
+
+        return message.join(", ");
     }
 
     private onUpdate(value: number[]) {
@@ -150,38 +201,6 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
         }
     }
 
-    private validateSettings(): string {
-        const message: string[] = [];
-        const { minimumValue, maximumValue, lowerBoundValue, upperBoundValue, stepValue } = this.state;
-        const validMax = typeof maximumValue === "number";
-        const validMin = typeof minimumValue === "number";
-        if (!validMax) {
-            message.push("Maximum value is required");
-        }
-        if (!validMin) {
-            message.push("Minimum value is required");
-        }
-        if (typeof lowerBoundValue !== "number") {
-            message.push("Lower bound value is required");
-        }
-        if (typeof upperBoundValue !== "number") {
-            message.push("Upper bound value is required");
-        }
-        if (typeof maximumValue === "number" && typeof minimumValue === "number") {
-            if (validMin && validMax && (minimumValue >= maximumValue)) {
-                message.push(`Minimum value ${minimumValue} should be less than the maximum value ${maximumValue}`);
-            }
-            if (!stepValue || stepValue <= 0) {
-                message.push(`Step value ${stepValue} should be greater than 0`);
-            } else if (validMax && validMin && (maximumValue - minimumValue) % stepValue > 0) {
-                message.push(`Step value is invalid, max - min (${maximumValue} - ${minimumValue})
-            should be evenly divisible by the step value ${stepValue}`);
-            }
-        }
-
-        return message.join(", ");
-    }
-
     private validateValues(): string {
         const message: string[] = [];
         const { minimumValue, maximumValue, lowerBoundValue, upperBoundValue } = this.state;
@@ -216,22 +235,4 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
 
         return defaultValue;
     }
-
-    private static parseStyle(style = ""): { [key: string]: string } {
-        try {
-            return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
-                const pair = line.split(":");
-                if (pair.length === 2) {
-                    const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
-                    styleObject[name] = pair[1].trim();
-                }
-                return styleObject;
-            }, {});
-        } catch (error) {
-            console.log("Failed to parse style", style, error);
-        }
-
-        return {};
-    }
-
 }
