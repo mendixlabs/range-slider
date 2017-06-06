@@ -152,11 +152,11 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
 
     private updateValues(mxObject?: mendix.lib.MxObject): RangeSliderContainerState {
         return {
-            lowerBoundValue: this.getValue(this.props.lowerBoundAttribute, mxObject, undefined),
-            maximumValue: this.getValue(this.props.maxAttribute, mxObject, undefined),
-            minimumValue: this.getValue(this.props.minAttribute, mxObject, undefined),
+            lowerBoundValue: this.getValue(this.props.lowerBoundAttribute, mxObject),
+            maximumValue: this.getValue(this.props.maxAttribute, mxObject),
+            minimumValue: this.getValue(this.props.minAttribute, mxObject),
             stepValue: this.getValue(this.props.stepAttribute, mxObject, this.props.stepValue),
-            upperBoundValue: this.getValue(this.props.upperBoundAttribute, mxObject, undefined)
+            upperBoundValue: this.getValue(this.props.upperBoundAttribute, mxObject)
         };
     }
 
