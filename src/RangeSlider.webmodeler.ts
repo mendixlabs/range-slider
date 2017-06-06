@@ -2,20 +2,12 @@ import { Component, createElement } from "react";
 import { RangeSlider, RangeSliderProps } from "./components/RangeSlider";
 import RangeSliderContainer, { RangeSliderContainerProps } from "./components/RangeSliderContainer";
 
-import * as css from "./ui/RangeSlider.scss";
-import * as rcsliderCss from "rc-slider/dist/rc-slider.css";
+declare function require(name: string): string;
 
 // tslint:disable-next-line:class-name
 export class preview extends Component<RangeSliderContainerProps, {}> {
-    private warnings: string;
-
-    componentWillMount() {
-        this.addPreviewStyle(css, "widget-range-slider-preview-style");
-        this.addPreviewStyle(rcsliderCss, "widget-rcslider-preview-style");
-    }
-
     render() {
-        this.warnings = RangeSliderContainer.validateSettings({
+        const warnings = RangeSliderContainer.validateSettings({
             lowerBoundValue: 20,
             maximumValue: 100,
             minimumValue: 0,
@@ -23,12 +15,12 @@ export class preview extends Component<RangeSliderContainerProps, {}> {
             upperBoundValue: 50
         });
 
-        return createElement(RangeSlider, this.transformProps(this.props));
+        return createElement(RangeSlider, this.transformProps(this.props, warnings));
     }
 
-    private transformProps(props: RangeSliderContainerProps): RangeSliderProps {
+    private transformProps(props: RangeSliderContainerProps, warnings: string): RangeSliderProps {
         return {
-            alertMessage: this.warnings,
+            alertMessage: warnings,
             bootstrapStyle: props.bootstrapStyle,
             className: props.class,
             decimalPlaces: props.decimalPlaces,
@@ -43,18 +35,10 @@ export class preview extends Component<RangeSliderContainerProps, {}> {
             upperBound: 50
         };
     }
+}
 
-    private addPreviewStyle(styleClass: string, styleId: string) {
-        // This workaround is to load style in the preview temporary till mendix has a better solution
-        const iFrame = document.getElementsByClassName("t-page-editor-iframe")[0] as HTMLIFrameElement;
-        const iFrameDoc = iFrame.contentDocument;
-        if (!iFrameDoc.getElementById(styleId)) {
-            const styleTarget = iFrameDoc.head || iFrameDoc.getElementsByTagName("head")[0];
-            const styleElement = document.createElement("style");
-            styleElement.setAttribute("type", "text/css");
-            styleElement.setAttribute("id", styleId);
-            styleElement.appendChild(document.createTextNode(styleClass));
-            styleTarget.appendChild(styleElement);
-        }
-    }
+export function getPreviewCss() {
+    return (
+        require("./ui/RangeSlider.scss") + require("rc-slider/dist/rc-slider.css")
+    );
 }
