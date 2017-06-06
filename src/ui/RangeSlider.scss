@@ -7,6 +7,15 @@
 
     .rc-slider-handle, .rc-slider-dot-active {
         border: 2px solid $brand-default;
+
+        &:active {
+            box-shadow: none;
+            border-color: $brand-default;
+        }
+
+        &:hover {
+            border-color: $brand-default;
+        }
     }
 
     &.has-error {
