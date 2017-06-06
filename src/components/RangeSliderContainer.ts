@@ -48,7 +48,9 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
     }
 
     render() {
-        const disabled = !this.props.mxObject || this.props.readOnly;
+        const disabled = !this.props.mxObject || this.props.readOnly
+            || !!(this.props.lowerBoundAttribute && this.props.mxObject.isReadonlyAttr(this.props.lowerBoundAttribute))
+            || !!(this.props.upperBoundAttribute && this.props.mxObject.isReadonlyAttr(this.props.upperBoundAttribute));
 
         const alertMessage = !disabled
             ? RangeSliderContainer.validateSettings(this.state) || this.validateValues()
