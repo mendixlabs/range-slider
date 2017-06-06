@@ -95,6 +95,7 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
                 return styleObject;
             }, {});
         } catch (error) {
+            // tslint:disable-next-line no-console
             console.log("Failed to parse style", style, error);
         }
 

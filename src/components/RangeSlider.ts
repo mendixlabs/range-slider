@@ -78,16 +78,12 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
         let validLowerBound = 0;
         let validUpperBound = 0;
         if (typeof minValue === "number" && typeof maxValue === "number" && typeof stepValue === "number") {
-            if (typeof lowerBound === "number") {
-                validLowerBound = lowerBound;
-            } else {
-                validLowerBound = RangeSlider.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
-            }
-            if (typeof upperBound === "number") {
-                validUpperBound = upperBound;
-            } else {
-                validUpperBound = RangeSlider.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
-            }
+            validLowerBound = typeof lowerBound === "number"
+                ? lowerBound
+                : RangeSlider.isValidMinMax(this.props) ? (minValue + stepValue) : 1;
+            validUpperBound = typeof upperBound === "number"
+                ? upperBound
+                : RangeSlider.isValidMinMax(this.props) ? (maxValue - stepValue) : (100 - stepValue);
         }
 
         return [ validLowerBound, validUpperBound ];
