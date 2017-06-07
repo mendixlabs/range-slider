@@ -24,12 +24,6 @@
         }
     }
 
-    /* correction to keep the marks on the edges readable*/
-    .rc-slider-mark {
-        left: 1%;
-        width: 98%;
-    }
-
     .rc-slider {
         &.rc-slider-with-marks {
             padding-bottom: 25px;
