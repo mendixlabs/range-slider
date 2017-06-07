@@ -11,7 +11,7 @@ webpackConfig.forEach(function (currentWebpackConfig) {
         devtool: false,
         plugins: webpackLoaderOptionsPlugin
     });
-    webpackConfigRelease.push(configRelease)
+    webpackConfigRelease.push(configRelease);
 });
 
 module.exports = function(grunt) {
@@ -78,10 +78,10 @@ module.exports = function(grunt) {
 
         file_append: {
             addSourceURL: {
-                files: [{
+                files: [ {
                     append: "\n\n//# sourceURL=RangeSlider.webmodeler.js\n",
                     input: "dist/tmp/src/RangeSlider.webmodeler.js"
-                }]
+                } ]
             }
         },
 
