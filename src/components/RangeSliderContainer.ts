@@ -53,7 +53,7 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
             || !!(this.props.upperBoundAttribute && this.props.mxObject.isReadonlyAttr(this.props.upperBoundAttribute));
 
         const alertMessage = !disabled
-            ? RangeSliderContainer.validateSettings(this.state) || this.validateValues()
+            ? this.validateSettings(this.state) || this.validateValues()
             : "";
 
         return createElement(RangeSlider, {
@@ -102,7 +102,7 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
         return {};
     }
 
-    public static validateSettings(state: RangeSliderContainerState): string {
+    private validateSettings(state: RangeSliderContainerState): string {
         const message: string[] = [];
         const { minimumValue, maximumValue, lowerBoundValue, upperBoundValue, stepValue } = state;
         const validMax = typeof maximumValue === "number";

@@ -7,20 +7,11 @@ declare function require(name: string): string;
 // tslint:disable-next-line:class-name
 export class preview extends Component<RangeSliderContainerProps, {}> {
     render() {
-        const warnings = RangeSliderContainer.validateSettings({
-            lowerBoundValue: 20,
-            maximumValue: 100,
-            minimumValue: 0,
-            stepValue: this.props.stepValue,
-            upperBoundValue: 50
-        });
-
-        return createElement(RangeSlider, this.transformProps(this.props, warnings));
+        return createElement(RangeSlider, this.transformProps(this.props));
     }
 
-    private transformProps(props: RangeSliderContainerProps, warnings: string): RangeSliderProps {
+    private transformProps(props: RangeSliderContainerProps): RangeSliderProps {
         return {
-            alertMessage: warnings,
             bootstrapStyle: props.bootstrapStyle,
             className: props.class,
             decimalPlaces: props.decimalPlaces,
