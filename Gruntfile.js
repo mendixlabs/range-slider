@@ -2,7 +2,7 @@
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config");
 const webpackConfigRelease = [];
-webpackConfig.forEach(function (currentWebpackConfig) {
+webpackConfig.forEach(function(currentWebpackConfig) {
     const webpackLoaderOptionsPlugin = currentWebpackConfig.plugins.slice(0);
     const configRelease = {};
 
