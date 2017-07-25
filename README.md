@@ -8,7 +8,7 @@ Change a range of values using a slider.
 * Render range slider with different bootstrap colors
 
 ## Dependencies
-Mendix 7.3
+Mendix 7.4
 
 ## Usage
 Place the widget in the context of an object that has attributes for maximum value, minimum value, lower bound value and upper bound value
@@ -41,9 +41,9 @@ To set up the development environment, run:
 
 Create a folder named `dist` in the project root.
 
-Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Changes to the widget code shall be automatically pushed to this test project.
+Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from 
 
-[https://github.com/MendixLabs/range-slider/releases/download/1.1.1/Test.mpk](https://github.com/MendixLabs/range-slider/releases/download/1.1.1/Test.mpk)
+[https://github.com/MendixLabs/range-slider/releases/latest](https://github.com/MendixLabs/range-slider/releases/latest). Changes to the widget code shall be automatically pushed to this test project.
 
 To automatically compile, bundle and push code changes to the running test project, run:
 
