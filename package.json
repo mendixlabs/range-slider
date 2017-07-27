@@ -47,7 +47,7 @@
     "grunt-newer": "^1.1.1",
     "grunt-webpack": "^3.0.0",
     "istanbul": "^0.4.3",
-    "istanbul-instrumenter-loader": "^2.0.0",
+    "istanbul-instrumenter-loader": "^3.0.0",
     "jasmine": "^2.6.0",
     "json-loader": "^0.5.4",
     "karma": "^1.4.0",
@@ -70,11 +70,11 @@
     "sass-loader": "^6.0.3",
     "source-map-loader": "^0.2.0",
     "style-loader": "^0.18.2",
-    "ts-loader": "^2.0.2",
+    "ts-loader": "^2.3.2",
     "tslint": "^5.4.3",
     "tslint-eslint-rules": "^4.0.0",
     "typescript": "^2.2.1",
-    "webpack": "^3.3.0",
+    "webpack": "^3.4.1",
     "webpack-dev-server": "^2.4.4"
   },
   "dependencies": {
