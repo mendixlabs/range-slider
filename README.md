@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/mendixlabs/range-slider.svg?branch=master)](https://travis-ci.org/mendixlabs/range-slider)
+[![Dependency Status](https://david-dm.org/mendixlabs/range-slider.svg)](https://david-dm.org/mendixlabs/range-slider)
+[![Dev Dependency Status](https://david-dm.org/mendixlabs/range-slider.svg#info=devDependencies)](https://david-dm.org/mendixlabs/range-slider#info=devDependencies)
+[![codecov](https://codecov.io/gh/mendixlabs/range-slider/branch/master/graph/badge.svg)](https://codecov.io/gh/mendixlabs/range-slider)
+
 # Range Slider
 Change a range of values using a slider.
 
