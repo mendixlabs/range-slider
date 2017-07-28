@@ -50,7 +50,7 @@ describe("RangeSlider", () => {
                     step: stepValue,
                     value: [ lowerBound, upperBound ],
                     vertical: false
-                }), createElement(Alert, { className: "", message: "" })
+                }), createElement(Alert, { bootstrapStyle: "danger", message: "", className: "" })
             )
         );
     });

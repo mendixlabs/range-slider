@@ -69,10 +69,10 @@ class RangeSlider extends Component<RangeSliderProps, {}> {
                 step: stepValue,
                 value: rangeSliderValues
             }),
-            createElement(Alert as any,
+            createElement(Alert,
                 {
                     bootstrapStyle: "danger",
-                    className: "alert alert-danger widget-range-slider",
+                    className: "widget-range-slider-alert",
                     message: alertMessage
                 })
         );
