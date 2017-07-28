@@ -5,7 +5,7 @@ import { Handle, Marks, Range } from "rc-slider";
 import Tooltip from "rc-tooltip";
 import { Alert } from "./Alert";
 
-import "rc-slider/dist/rc-slider.css";
+import "rc-slider/assets/index.css";
 import "../ui/RangeSlider.scss";
 
 interface TooltipProps {
