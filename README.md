@@ -27,7 +27,7 @@ Mendix 7.4
 The `Range slider` allows a user to set two values between two bounds (minimum value and maximum value)
 However, if there is only one value that needs to be set between two bounds, download the slider from [appstore](https://appstore.home.mendix.com/link/app/48786/Mendix/Slider) or from [github](https://github.com/mendixlabs/slider) instead.
 
-![Sample slider](/assets/Sample_range.png)
+![Sample slider](/assets/Sample_range.PNG)
 
 From the modeler place the widget in the context of an object that has attributes for maximum value, minimum value, lower bound value and upper bound value
 
