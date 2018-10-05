@@ -24,6 +24,10 @@ export interface RangeSliderContainerProps extends WrapperProps {
     readOnly: boolean;
     lowerBoundAttribute: string;
     upperBoundAttribute: string;
+    staticMinimumValue: number;
+    staticMaximumValue: number;
+    staticlowerBoundValue: number;
+    staticUpperBoundValue: number;
 }
 
 interface Nanoflow {
@@ -165,12 +169,14 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
     }
 
     private updateValues(mxObject?: mendix.lib.MxObject): RangeSliderContainerState {
+        const { lowerBoundAttribute, maxAttribute, minAttribute, upperBoundAttribute } = this.props;
+
         return {
-            lowerBoundValue: this.getValue(this.props.lowerBoundAttribute, mxObject),
-            maximumValue: this.getValue(this.props.maxAttribute, mxObject),
-            minimumValue: this.getValue(this.props.minAttribute, mxObject),
+            lowerBoundValue: this.getValue(lowerBoundAttribute, mxObject, this.props.staticlowerBoundValue),
+            maximumValue: this.getValue(maxAttribute, mxObject, this.props.staticMaximumValue),
+            minimumValue: this.getValue(minAttribute, mxObject, this.props.staticMinimumValue),
             stepValue: this.getValue(this.props.stepAttribute, mxObject, this.props.stepValue),
-            upperBoundValue: this.getValue(this.props.upperBoundAttribute, mxObject)
+            upperBoundValue: this.getValue(upperBoundAttribute, mxObject, this.props.staticUpperBoundValue)
         };
     }
 
