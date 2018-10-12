@@ -16,14 +16,14 @@ export class preview extends Component<RangeSliderContainerProps, {}> {
             className: props.class,
             decimalPlaces: props.decimalPlaces,
             disabled: false,
-            lowerBound: props.staticlowerBoundValue,
+            lowerBound: 20,
             maxValue: props.staticMaximumValue,
             minValue: props.staticMinimumValue,
             noOfMarkers: props.noOfMarkers,
             stepValue: props.stepValue <= 0 ? 10 : props.stepValue,
             style: RangeSliderContainer.parseStyle(props.style),
             tooltipText: props.tooltipText,
-            upperBound: props.staticUpperBoundValue
+            upperBound: 50
         };
     }
 }

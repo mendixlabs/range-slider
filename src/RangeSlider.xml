@@ -7,7 +7,37 @@
         <property key="minAttribute" type="attribute" required="false">
             <caption>Minimum attribute</caption>
             <category>Data source</category>
-            <description>Holds the minimum value that can be selected, if not provided, 'Static minimum value' will be used</description>
+            <description>Holds the minimum slider value (when empty the 'Default minimum value' is used)</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
+                <attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="maxAttribute" type="attribute" required="false">
+            <caption>Maximum attribute</caption>
+            <category>Data source</category>
+            <description>Holds the maximum slider value (when empty the 'Default maximum value' is used)</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
+                <attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="lowerBoundAttribute" required="false" type="attribute">
+            <caption>Lower bound attribute</caption>
+            <category>Data source</category>
+            <description>The lower bound value on the slider</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
+                <attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="upperBoundAttribute" required="false" type="attribute">
+            <caption>Upper bound attribute</caption>
+            <category>Data source</category>
+            <description>The upper bound value on the slider</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -15,54 +45,14 @@
             </attributeTypes>
         </property>
         <property key="staticMinimumValue" type="integer" defaultValue="0">
-            <caption>Static minimum value</caption>
+            <caption>Default minimum value</caption>
             <category>Data source</category>
-            <description/>
-        </property>
-        <property key="maxAttribute" type="attribute" required="false">
-            <caption>Maximum attribute</caption>
-            <category>Data source</category>
-            <description>Holds the maximum value that can be selected, if not provided, 'Static maximum value' will be used</description>
-            <attributeTypes>
-                <attributeType name="Integer"/>
-                <attributeType name="Long"/>
-                <attributeType name="Decimal"/>
-            </attributeTypes>
+            <description>The minimum slider value (when not provided through 'Minimum attribute')</description>
         </property>
         <property key="staticMaximumValue" type="integer" defaultValue="100">
-            <caption>Static maximum value</caption>
+            <caption>Default maximum value</caption>
             <category>Data source</category>
-            <description/>
-        </property>
-        <property key="lowerBoundAttribute" required="false" type="attribute">
-            <caption>Lower bound attribute</caption>
-            <category>Data source</category>
-            <description>The lower bound value on the slider, if not provided, 'Static lower bound' will be used</description>
-            <attributeTypes>
-                <attributeType name="Integer"/>
-                <attributeType name="Long"/>
-                <attributeType name="Decimal"/>
-            </attributeTypes>
-        </property>
-        <property key="staticlowerBoundValue" type="integer" defaultValue="20">
-            <caption>Static lower bound</caption>
-            <category>Data source</category>
-            <description/>
-        </property>
-        <property key="upperBoundAttribute" required="false" type="attribute">
-            <caption>Upper bound attribute</caption>
-            <category>Data source</category>
-            <description>The upper bound value on the slider, if not provided, 'Static upper bound' will be used</description>
-            <attributeTypes>
-                <attributeType name="Integer"/>
-                <attributeType name="Long"/>
-                <attributeType name="Decimal"/>
-            </attributeTypes>
-        </property>
-        <property key="staticUpperBoundValue" type="integer" defaultValue="50">
-            <caption>Static upper bound</caption>
-            <category>Data source</category>
-            <description/>
+            <description>The maximum slider value (when not provided through 'Maximum attribute')</description>
         </property>
         <property key="onChangeMicroflow" type="microflow" required="false">
             <caption>On change microflow</caption>
@@ -87,9 +77,9 @@
             <description>Text to show when hovering over the slider value. Leave this empty to disable the tooltip. Use {1} as a replacement for the current value of the slider</description>
         </property>
         <property key="stepAttribute" type="attribute" required="false">
-            <caption>Step attribute</caption>
+            <caption>Step size attribute</caption>
             <category>Appearance</category>
-            <description>Holds the value for the interval between two points(numbers)</description>
+            <description>Holds the interval between two selectable points (when empty the 'Default step size' is used)</description>
             <attributeTypes>
                 <attributeType name="Integer"/>
                 <attributeType name="Long"/>
@@ -97,9 +87,9 @@
             </attributeTypes>
         </property>
         <property key="stepValue" type="integer" defaultValue="10">
-            <caption>Step value</caption>
+            <caption>Default step size</caption>
             <category>Appearance</category>
-            <description>Number of points to shift when sliding (Used if step attribute is not set)</description>
+            <description>The interval between two selectable points (when not provided through 'Step size attribute')</description>
         </property>
         <property key="decimalPlaces" type="integer" defaultValue="1">
             <caption>Decimal places</caption>
