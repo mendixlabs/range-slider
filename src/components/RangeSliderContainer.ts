@@ -114,8 +114,10 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
     private validateSettings(state: RangeSliderContainerState): string {
         const message: string[] = [];
         const { minimumValue, maximumValue, lowerBoundValue, upperBoundValue, stepValue } = state;
+        const { lowerBoundAttribute, upperBoundAttribute } = this.props;
         const validMax = typeof maximumValue === "number";
         const validMin = typeof minimumValue === "number";
+
         if (!validMax) {
             message.push("Maximum value is required");
         }
@@ -145,6 +147,16 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
                  should be evenly divisible by the step value ${stepValue}`);
                 }
             }
+
+            if (upperBoundValue && upperBoundValue % 1 !== 0) {
+                message.push(`Cannot set invalid value ${upperBoundValue}
+                    to MxObject attribute ${upperBoundAttribute}`);
+            }
+
+            if (lowerBoundValue && lowerBoundValue % 1 !== 0) {
+                message.push(`Cannot set invalid value ${lowerBoundValue}
+                    to MxObject attribute ${lowerBoundAttribute}`);
+            }
         }
 
         return message.join(", ");
@@ -154,14 +166,19 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
         const { mxObject, lowerBoundAttribute, upperBoundAttribute } = this.props;
         if (mxObject && Array.isArray(value) && value.length > 0) {
             if (value[0] !== this.state.lowerBoundValue) {
-                mxObject.set(lowerBoundAttribute, value[0]);
+                if (this.isDecimal(lowerBoundAttribute)) {
+                    mxObject.set(lowerBoundAttribute, value[0]);
+                } else {
+                    this.setState({ lowerBoundValue: value[0] });
+                }
             } else {
                 if (this.state.maximumValue && value[1] > this.state.maximumValue) {
                     mxObject.set(upperBoundAttribute, this.getValue(this.props.maxAttribute, mxObject));
-                } else {
+                } else if (this.isDecimal(upperBoundAttribute)) {
                     mxObject.set(upperBoundAttribute, value[1]);
+                } else {
+                    this.setState({ upperBoundValue: value[1] });
                 }
-
             }
         }
     }
@@ -258,6 +275,13 @@ export default class RangeSliderContainer extends Component<RangeSliderContainer
         }
 
         return message.join(", ");
+    }
+
+    private isDecimal(attribute: string) {
+        if (this.props.mxObject.getAttributeType(attribute) === "Decimal") {
+            return true;
+        }
+        return false;
     }
 
     private getValue(attributeName: string, mxObject?: mendix.lib.MxObject, defaultValue?: number): number | undefined {
