@@ -6,11 +6,11 @@
   "scripts": {
     "pretest": "tsc && npm run lint && grunt release",
     "test": "karma start --single-run --codeCoverage && node tests/remap.js",
-    "emit": "tsc",
+    "typeCheck": "tsc --noEmit",
     "lint": "tslint -c tslint.json '**/*.ts' '**/*.tsx' --exclude '**/node_modules/**'"
   },
   "pre-commit": [
-    "emit",
+    "typeCheck",
     "lint"
   ],
   "repository": {
